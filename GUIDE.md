@@ -7,17 +7,22 @@ files, and (once) pasting a small text block and checking three numbers.
 **What the mod does:**
 
 - Factions are gone forever. Nobody can create or join one — not you, not the AI.
-- Three new countries **sit on the starting map with their own borders**,
-  next to all the normal ones: **Nesterivtsi**, **Kamianets** and **Kharkiv**
-  (all on/next to their real Ukrainian homes). You can even pick and play
-  them from the country-selection screen.
-- When **you** press the decision **"Randomize the World!"** (Decisions
-  panel → *Random World* category — available from day 1, free, once per
-  campaign), the **whole world map is reshuffled**: every country starts
-  from one random state and grows outward into neighboring land until the
-  entire world is divided, with everyone roughly the same size. No state is
-  left unowned. The three custom countries grow from their historic homes.
-  The AI never presses this button — the timing is entirely yours.
+- Three new countries — **Nesterivtsi**, **Kamianets** and **Kharkiv** — sit
+  on the pre-randomization 1936 map with their own borders on/next to their
+  real Ukrainian homes (that map exists only for a moment before the
+  reshuffle, see below).
+- **New Game is streamlined:** only the **1936** scenario exists (1939 is
+  removed), and the Select Country screen shows **no featured majors** —
+  just the "Other countries" card that takes you to picking a country on
+  the map.
+- **The world is reshuffled automatically while the scenario loads**, before
+  you pick a country: every existing country — the three custom ones
+  included — gets one completely **random seed state** and grows outward
+  into neighboring land until the entire world is divided, with everyone
+  roughly the same size and no state left unowned. You choose your country
+  on the already-randomized map. (A fallback "Randomize the World!"
+  decision exists in case the scenario override doesn't load on your game
+  version — normally you never see it.)
 - Every country gets a **random ideology** (fascist / communist / democratic /
   non-aligned) — names like "Nesterivtsi Reich" or "Communist Nesterivtsi"
   appear automatically.
@@ -101,6 +106,9 @@ When you're done, the mod folder must look exactly like this:
 Documents\Paradox Interactive\Hearts of Iron IV\mod\random_world\
 ├── descriptor.mod
 ├── common\
+│   ├── bookmarks\
+│   │   ├── the_gathering_storm.txt         ← 1936 scenario: no majors + auto-randomize on load
+│   │   └── blitzkrieg.txt                  ← empty on purpose: removes the 1939 scenario
 │   ├── country_tags\
 │   │   └── 01_random_world_tags.txt        ← declares the tags NES, KAM, KHA
 │   ├── countries\
@@ -199,24 +207,28 @@ If a number differs, change it in **two places** (both are commented):
 
 1. Launcher → **Playsets**: add *Random World - No Factions* to your playset
    and tick it. (Achievements will be disabled — normal for any mod.)
-2. Play → new game, **1936**. Already on the country-selection map you
-   should see the first proof the mod is loaded: **Nesterivtsi, Kamianets
-   and Kharkiv with their own borders** in and next to Ukraine. Pick any
-   country — even one of them.
-3. In-game, open the **Decisions** panel. You should see the category
-   **"Random World"** with the decision **"Randomize the World!"**.
-   *This is the mod's heartbeat check: decision visible = mod loaded and
-   working. No decision = the mod is not active (see Troubleshooting).*
-4. Click the decision whenever you like (it costs nothing). The game will
-   freeze for a few seconds — the script is dividing the whole planet — and
-   then: a patchwork world, no grey/unowned land anywhere, every country
-   with a random ideology, no factions, the custom countries grown outward
-   from their homes.
-5. Quick sanity check of the rules we must not break: open any state — its
-   building **slots** and **population** are vanilla; only the built
-   factories differ.
-6. The decision (and its whole category) disappears after use and never
-   comes back in this campaign — not even after save/load.
+2. **New Game.** First proof the mod is loaded: there is **only one
+   scenario — 1936** (no 1939 card), and the Select Country screen shows
+   **no major portraits**, only **"Other countries"**.
+3. Continue to the map. Loading takes a few extra seconds — that is the
+   script dividing the whole planet. The lobby map should already be a
+   **randomized patchwork**: pick literally any country you like the look
+   of (Nesterivtsi, Kamianets and Kharkiv are somewhere out there too, with
+   random lands) and start.
+4. Sanity checks in-game: no grey/unowned land anywhere; every country has
+   a random ideology; the diplomacy screen offers no faction actions; open
+   any state — building **slots** and **population** are vanilla, only the
+   built factories differ.
+5. You should **never** see a "Random World" decision category — it is a
+   fallback that only appears if the scenario override failed to load
+   (see Troubleshooting). If you see it, the auto-randomization did not
+   run; press the decision to reshuffle manually and then fix the bookmark
+   filenames.
+6. **One honest caveat:** the exact moment the engine runs a scenario's
+   `effect` block is version-dependent. If on your build the lobby map
+   still shows the historic world, the reshuffle happens right after you
+   press Play instead — same result, just after selection rather than
+   before. Nothing to fix; that is the engine's limit.
 
 **Where the logs are** (your best friends when something is off):
 `Documents\Paradox Interactive\Hearts of Iron IV\logs\` —
@@ -229,11 +241,12 @@ If a number differs, change it in **two places** (both are commented):
 
 Everything lives in `random_world_scripted_effects.txt` (heavily commented);
 this is the same story without code. The **faction ban** (step 1) runs by
-itself every time a session starts; steps 2–11 run once, the moment you
-press **"Randomize the World!"** in the Decisions panel. Separately, the
-three custom countries receive their home states already during map setup
-(three lines in their `history/countries` files) — that is why their borders
-exist before any randomization.
+itself every time a session starts. Steps 2–11 run once per campaign, fired
+from the 1936 scenario's `effect` block while the scenario loads (with the
+Decisions-panel button as a dormant fallback trigger). Separately, the three
+custom countries receive their home states during map setup (three lines in
+their `history/countries` files) — that is why their borders exist on the
+brief pre-randomization map.
 
 1. **Ban factions.** Whoever leads a faction dismantles it; then every
    country gets two permanent "country rules" that grey out *Create Faction*
@@ -243,9 +256,10 @@ exist before any randomization.
    white peace. Now land can move without dragging wars around.
 3. **Count the map.** The script counts every land state (that number ÷
    number of countries = the **target size** everyone should reach).
-4. **Seed the custom countries** on their home states — normally just
-   confirming the state each already owns and marking it as the capital.
-   (Safety net: if a home is somehow taken, the latecomer starts next door.)
+4. **(Optional) seed the custom countries** on their home states. **Off by
+   default** — NES/KAM/KHA drop through to the common lottery in step 6 and
+   can end up anywhere, like everyone else. Flip one switch (below) to
+   anchor them at their historic homes instead.
 5. **Build "the pool"**: the list of every country alive in 1936 plus the
    three customs. Each pool country also secretly *protects* one of its
    current states — random seeds may not land there. This guarantees no
@@ -281,15 +295,15 @@ exist before any randomization.
     military factories (0–6) and — on coastal states — dockyards (0–5) are
     set to weighted random values. Slot limits and population: untouched.
 
-**Tuning switch — fully random custom countries.** By design the custom
-countries keep their historic homes and only everyone else is random. If you
-want NES/KAM/KHA thrown into the same lottery as everyone, open
-`random_world_scripted_effects.txt`, find `rw_seed_custom_countries`
-(section 5) and change `set_variable = { global.rw_use_historic_homes = 1 }`
-to `= 0` — they will then seed anywhere on the planet. Their borders on the
-pre-reshuffle starting map are a separate feature: remove the
-`transfer_state` / `add_state_core` lines in their `history/countries` files
-if you want those gone too.
+**Tuning switch — anchor the custom countries at home.** By default
+NES/KAM/KHA are thrown into the same lottery as everyone and their historic
+homes only exist as starting borders on the brief pre-reshuffle map. If you
+want them to *stay and grow from* their historic homes during the reshuffle,
+open `random_world_scripted_effects.txt`, find `rw_seed_custom_countries`
+(section 5) and change `set_variable = { global.rw_use_historic_homes = 0 }`
+to `= 1`. Independently, removing the `transfer_state` / `add_state_core`
+lines in their `history/countries` files removes their pre-reshuffle
+starting borders.
 
 ## Part 8 — Which file does what (one line each)
 
@@ -299,8 +313,10 @@ if you want those gone too.
 | `common/country_tags/01_random_world_tags.txt` | "NES, KAM, KHA exist." |
 | `common/countries/*.txt` | Per country: unit-art style + fallback color. |
 | `common/countries/colors.txt` | Map colors — **you** build it in Step 3. |
-| `common/decisions/categories/…` | The "Random World" folder in the Decisions panel. |
-| `common/decisions/random_world_decisions.txt` | The one-shot "Randomize the World!" button (free, player-only; AI never presses it). |
+| `common/bookmarks/the_gathering_storm.txt` | Overrides the 1936 scenario: removes the featured majors and auto-runs the randomizer while the scenario loads. |
+| `common/bookmarks/blitzkrieg.txt` | Deliberately empty: erases the 1939 scenario from New Game. |
+| `common/decisions/categories/…` | The "Random World" folder in the Decisions panel (fallback only). |
+| `common/decisions/random_world_decisions.txt` | Fallback one-shot "Randomize the World!" button — appears only if the scenario override failed to load. |
 | `common/on_actions/ZZ_random_world_on_actions.txt` | "At every session start ban factions; every week re-ban them." |
 | `common/scripted_effects/random_world_scripted_effects.txt` | The entire algorithm (sections 0–12, commented). |
 | `history/countries/TAG - Name.txt` | Custom country's 1936 setup: capital, **its starting borders** (`transfer_state` + `add_state_core`), techs, politics, equipment. |
@@ -316,6 +332,9 @@ if you want those gone too.
 | Mod not in the launcher | The folder isn't at `...\Hearts of Iron IV\mod\random_world`, or `random_world.mod` (launcher side) is missing — redo Part 2, or use `docs/random_world.mod.example`. |
 | **Mod seems to have no effect in-game** (no custom countries on the map, no "Random World" decision) | The mod is not actually loading. Check, in order: (1) it is **ticked in the active playset** (top of the launcher — the playset selected there is what launches); (2) the folder is exactly `mod\random_world` with `descriptor.mod` **directly** inside it — a very common mistake is a nested `mod\random_world\random_world\…`; (3) you started a **new** game, not an old save from before the mod; (4) `error.log` after launch — a syntax typo can make the game silently drop a file. |
 | Decision pressed but nothing changed | Impossible in a loaded mod — but check `game.log` for the `[RW]` lines; if they stop at some phase, `error.log` names the guilty line (see the substitution table below). |
+| **Still two scenarios** on New Game, or the majors' portraits are still there | Your game version names its bookmark files differently, so the override didn't attach. Open the **game's** `common\bookmarks\` folder and rename the mod's two files to match the vanilla names exactly. |
+| Everything works but the lobby map is NOT randomized (reshuffle happens after pressing Play) | Your engine build runs the scenario `effect` block at session start instead of scenario load. Same result, later moment — engine limitation, nothing to fix. |
+| The "Random World" decision category IS visible in-game | The scenario override didn't load (see the bookmark-filename row above) — the decision is the built-in fallback; use it, then fix the filenames. |
 | Countries turned grey on the map | Your `colors.txt` copy is broken — redo Part 4 (copy vanilla file again, paste snippet at the very bottom, nothing else changed). |
 | Checkerboard instead of a flag | A `.tga` is missing/renamed in `gfx/flags` (all three sizes must exist). |
 | `NES`/`KAM`/`KHA` show as raw text instead of names | Localisation file lost its BOM or the `english` folder name is wrong. Re-copy `random_world_l_english.yml` from this repo. |
@@ -340,10 +359,11 @@ the line `error.log` complains about and try the replacement:
 ## Part 10 — FAQ and honest limitations
 
 - **Achievements** are disabled with any mod. Nothing to do about it.
-- **The selection screen shows the vanilla world plus the three custom
-  countries.** The full reshuffle happens only when you press the decision —
-  that is by design, so you control the timing (and can play a normal-ish
-  start first if you want).
+- **You pick your country on the already-randomized map.** The classic
+  bookmark screen with major portraits is gone (only "Other countries"
+  remains), and the 1939 scenario is removed. The historic pre-reshuffle
+  map — with the custom countries on their Ukrainian homes — exists only
+  during scenario setup and is normally never seen.
 - **Armies at randomization** may teleport: units standing on land that
   changed hands get auto-relocated by the engine. Harmless, settles
   immediately.

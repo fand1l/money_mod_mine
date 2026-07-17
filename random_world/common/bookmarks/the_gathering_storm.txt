@@ -1,0 +1,47 @@
+# ==============================================================================
+# RANDOM WORLD - 1936 scenario override
+# ------------------------------------------------------------------------------
+# Files in common/bookmarks are replaced BY FILENAME, so this file overrides
+# the vanilla 1936 scenario ("the gathering storm") completely. Three changes:
+#
+#   1. NO featured countries. Vanilla lists GER/SOV/USA/... here - that is
+#      what draws the big portrait cards on the Select Country screen.
+#      We list none, so only the "Other countries" card remains and you go
+#      straight to picking a country on the map.
+#   2. default_country = "---" (= "other countries"). If your error.log ever
+#      complains about it, replace "---" with any tag, e.g. NES.
+#   3. The effect block below runs when the scenario is set up - BEFORE the
+#      map lobby where you pick your country - so the whole world is already
+#      randomized while you choose. The global flag makes it one-shot and
+#      also hides the fallback decision (see common/decisions/) which stays
+#      dormant unless this file failed to load on your game version.
+#
+# IMPORTANT: if your game version names this file differently, the override
+# will not load. Open the GAME's folder common/bookmarks/ and make sure the
+# mod's two files have EXACTLY the same names as the vanilla ones
+# (1936 = "the_gathering_storm.txt", 1939 = "blitzkrieg.txt").
+# ==============================================================================
+
+bookmarks = {
+	bookmark = {
+		name = "GATHERING_STORM_NAME"
+		desc = "GATHERING_STORM_DESC"
+		date = 1936.1.1.12
+		picture = "GFX_select_date_1936"
+		default_country = "---"
+		default = yes
+
+		"---" = {
+			history = "OTHER_GATHERING_STORM_DESC"
+		}
+
+		effect = {
+			randomize_weather = 22345 # <- DO NOT REMOVE
+			if = {
+				limit = { NOT = { has_global_flag = rw_world_randomized } }
+				set_global_flag = rw_world_randomized
+				rw_randomize_world = yes
+			}
+		}
+	}
+}

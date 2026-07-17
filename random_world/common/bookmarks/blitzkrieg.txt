@@ -1,0 +1,8 @@
+# ==============================================================================
+# RANDOM WORLD - 1939 scenario removed
+# ------------------------------------------------------------------------------
+# This file deliberately defines NOTHING. Because bookmark files are replaced
+# by filename, this empty override erases the vanilla 1939 "Blitzkrieg"
+# scenario, leaving 1936 as the only choice on the New Game screen.
+# (To bring 1939 back, simply delete this file from the mod.)
+# ==============================================================================

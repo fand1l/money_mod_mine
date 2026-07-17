@@ -231,3 +231,28 @@ Requested after play-testing the reshuffle:
    → any adjacent free state. Combined with seed spacing this produces
    compact blobs instead of the elongated "snake" countries observed on the
    first play-test map.
+
+---
+
+## 9. Follow-up changes (v1.3)
+
+Clarified intent: historic homes were meant for the PRE-randomization map
+only, and the reshuffle should happen before country selection.
+
+1. **Custom countries fully random by default.**
+   `global.rw_use_historic_homes` now defaults to `0`: NES/KAM/KHA enter the
+   common seed lottery. Their historic homes remain as starting borders on
+   the pre-reshuffle map (history files unchanged); setting the switch back
+   to `1` re-anchors them during the reshuffle.
+2. **Randomization moved to scenario load.** The vanilla 1936 bookmark file
+   is overridden: no featured majors (only "Other countries"), and its
+   `effect` block — the same place vanilla runs `randomize_weather` — fires
+   the world reshuffle, so the map lobby where the player picks a country
+   is already randomized. Known caveat (documented): the exact moment the
+   engine runs bookmark effects is version-dependent; worst case the
+   reshuffle lands right after pressing Play.
+3. **1939 scenario removed** via an intentionally empty `blitzkrieg.txt`
+   override, leaving 1936 as the only New Game choice.
+4. **The decision is now a dormant fallback**: it only appears if the
+   bookmark override failed to attach (e.g. renamed vanilla files), since
+   the global flag that hides it is set by the bookmark effect.
