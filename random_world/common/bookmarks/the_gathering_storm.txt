@@ -10,15 +10,16 @@
 #      straight to picking a country on the map.
 #   2. default_country = "---" (= "other countries"). If your error.log ever
 #      complains about it, replace "---" with any tag, e.g. NES.
-#   3. The effect block below runs the reshuffle at scenario setup, BEFORE
-#      the map lobby - players pick their countries on the already-random
-#      map (multiplayer included). At this moment the engine's generator is
-#      deterministic (fixed setup seed), so WHICH world appears is chosen
-#      by the one number in common/scripted_effects/rw_world_seed.txt:
-#      change it for a new world, keep it to replay the same world.
-#      Alternative mode: comment the block out and the reshuffle moves to
-#      on_startup automatically - a fresh world every campaign, but applied
-#      only after pressing Play.
+#   3. The effect block below contains an OPTIONAL, DISABLED lobby-time
+#      trigger for the reshuffle. The active method is the "Randomize the
+#      World!" decision (Decisions panel, once per campaign, fresh world
+#      every time). Uncommenting the block below instead reshuffles during
+#      scenario setup, BEFORE the map lobby - handy for picking countries
+#      on the finished map (multiplayer) - but at that moment the engine's
+#      generator is deterministic: WHICH world appears is chosen by the
+#      number in common/scripted_effects/rw_world_seed.txt, and the same
+#      number always repeats the same world (change it + restart HOI4, or
+#      use randomize_seed_and_play.bat).
 #
 # IMPORTANT: if your game version names this file differently, the override
 # will not load. Open the GAME's folder common/bookmarks/ and make sure the
@@ -41,18 +42,19 @@ bookmarks = {
 
 		effect = {
 			randomize_weather = 22345 # <- DO NOT REMOVE
-			# Lobby-time reshuffle (the default; see note 3 in the header).
-			# Which world you get = the number in rw_world_seed.txt.
-			# To switch to fresh-world-after-Play mode, put a # before each
-			# of the five lines below - on_startup takes over by itself.
+			# OPTIONAL lobby-time reshuffle - DISABLED by default (see note 3
+			# in the header). Remove the # from the five lines below to
+			# generate the world before the lobby (world chosen by
+			# rw_world_seed.txt; identical per number). While disabled, the
+			# reshuffle is triggered by the in-game decision instead.
 			# (random_country is required: scripted effects cannot be called
 			# from this scope-less context.)
-			random_country = {
-				if = {
-					limit = { NOT = { has_global_flag = rw_world_randomized } }
-					rw_randomize_world = yes
-				}
-			}
+			#random_country = {
+			#	if = {
+			#		limit = { NOT = { has_global_flag = rw_world_randomized } }
+			#		rw_randomize_world = yes
+			#	}
+			#}
 		}
 	}
 }

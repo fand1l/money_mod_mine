@@ -377,3 +377,25 @@ can make the restart frictionless:
    0–999.
 3. Docs updated: GUIDE Part 6 item 6, file table; seed file header points
    at the script.
+
+---
+
+## 15. Follow-up changes (v1.9)
+
+Play-tester verdict on the lobby/seed workflow: reverting to the decision.
+
+1. **The "Randomize the World!" decision is the primary trigger again**
+   (in-session → fresh world every campaign, no seeds, no restarts). The
+   lobby-time bookmark trigger is commented out but kept as a documented
+   opt-in (with rw_world_seed.txt + randomize_seed_and_play.bat serving
+   that mode only); on_startup no longer triggers the reshuffle and is
+   back to probe-log + faction ban.
+2. **Industry floor:** per-state minimums raised to **2 civilian + 2
+   military factories** (rolls now 2–8 / 2–6; dockyards unchanged 0–5
+   coastal). Since every country owns at least one state, every country
+   starts with a working economy. Slot limits still clamp small states and
+   are never modified.
+3. Noted for the record: the "History of Our Nation / Give Randomness"
+   event the tester screenshotted is not from this mod — another workshop
+   randomizer in the playset (see the ugc_*.mod entries in error.log) and
+   should be disabled to avoid double-randomization.

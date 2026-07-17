@@ -1,20 +1,22 @@
 # ==============================================================================
-# RANDOM WORLD - FALLBACK activation decision
+# RANDOM WORLD - THE activation decision (the primary trigger)
 # ------------------------------------------------------------------------------
-# Normally you never see this: the world is randomized automatically by
-# the 1936 bookmark's effect block before the lobby (or, if that layer is
-# commented out, by on_startup right after pressing Play).
-# rw_randomize_world sets the global flag when it really runs, and that
-# flag hides this decision and its whole category.
-#
-# This is the last-resort SAFETY NET: it can only be visible if the
-# automatic trigger failed to execute (e.g. the mod's script files did not
-# load). In that case you can still trigger the reshuffle manually:
+# The world reshuffle is started MANUALLY from here: Decisions panel ->
+# "Random World" category -> "Randomize the World!", by whatever country
+# the human player controls. Because it fires in-session, the random
+# generator is fresh every time - every campaign gets a different world,
+# no seeds or restarts needed.
 #
 #   - costs 0 political power, available from day 1;
 #   - fire_only_once + the global flag make it strictly one-shot per
-#     campaign (save/load can never re-run it);
-#   - ai_will_do = 0 means AI countries never press it.
+#     campaign (save/load can never re-run it) - the flag also hides the
+#     decision and its category once the world has been reshuffled;
+#   - ai_will_do = 0 means AI countries never press it - only a human
+#     decides when (and whether) the world gets reshuffled.
+#
+# An optional automatic lobby-time trigger (world generated before country
+# selection, fixed per seed number) sits disabled in
+# common/bookmarks/the_gathering_storm.txt.
 # ==============================================================================
 
 RW_random_world_category = {

@@ -22,9 +22,10 @@
 #   - multiplayer safety: every player's game computes the identical world,
 #     nothing to coordinate beyond running the same mod version.
 #
-# (If instead you enable the alternative fresh-world-after-Play mode - see
-# common/bookmarks/the_gathering_storm.txt - the generator is already fresh
-# per launch and this number stops mattering.)
+# (This number only matters if you ENABLED the optional lobby-time trigger
+# in common/bookmarks/the_gathering_storm.txt. In the default mode - the
+# in-game "Randomize the World!" decision - the generator is already fresh
+# every session and this number is irrelevant.)
 # ==============================================================================
 
 rw_set_world_seed = {

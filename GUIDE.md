@@ -15,19 +15,19 @@ files, and (once) pasting a small text block and checking three numbers.
   removed), and the Select Country screen shows **no featured majors** —
   just the "Other countries" card that takes you to picking a country on
   the map.
-- **The world is reshuffled before you pick a country**: while the 1936
-  scenario loads, every existing country — the three custom ones included —
-  gets one completely **random seed state** and grows outward into
-  neighboring land until the entire world is divided, with everyone roughly
-  the same size and no state left unowned. You (and, in multiplayer, your
-  friends) choose countries on the **already-randomized lobby map**.
-- **Which world appears is selected by one number** in
-  `common/scripted_effects/rw_world_seed.txt` — the engine's setup
-  randomness is deterministic, so the number IS the world: change it before
-  a new campaign for a new world, keep it to replay the same one (and in
-  multiplayer everyone computes the identical map automatically). A
-  fallback "Randomize the World!" decision exists in case the automatic
-  trigger fails on your game version — normally you never see it.
+- **The world is reshuffled when you press the decision "Randomize the
+  World!"** (Decisions panel → *Random World* category — free, available
+  from day 1, once per campaign; the AI never presses it): every existing
+  country — the three custom ones included — gets one completely **random
+  seed state** and grows outward into neighboring land until the entire
+  world is divided, with everyone roughly the same size and no state left
+  unowned. Because the decision fires in-session, **every campaign gets a
+  fresh world** — no seed numbers, no game restarts.
+- Every state is guaranteed **at least 2 civilian and 2 military
+  factories** after the reshuffle, so no country starts without an economy.
+- (Optional, disabled: a lobby-time trigger in `common/bookmarks/` that
+  generates the world before country selection — deterministic per the
+  seed number in `rw_world_seed.txt`; see Part 6, item 6.)
 - Every country gets a **random ideology** (fascist / communist / democratic /
   non-aligned) — names like "Nesterivtsi Reich" or "Communist Nesterivtsi"
   appear automatically.
@@ -215,39 +215,33 @@ If a number differs, change it in **two places** (both are commented):
 2. **New Game.** First proof the mod is loaded: there is **only one
    scenario — 1936** (no 1939 card), and the Select Country screen shows
    **no major portraits**, only **"Other countries"**.
-3. Continue to the map lobby. Loading takes a few extra seconds — that is
-   the script dividing the whole planet. The lobby map should already be a
-   **randomized patchwork**: pick literally any country whose position you
-   like (Nesterivtsi, Kamianets and Kharkiv are out there too, with random
-   lands) and press **START**.
-4. Sanity checks in-game: no grey/unowned land anywhere; every country has
-   a random ideology; the diplomacy screen offers no faction actions; open
-   any state — building **slots** and **population** are vanilla, only the
-   built factories differ.
-5. You should **never** see a "Random World" decision category — it is the
-   last-resort fallback that only appears if BOTH automatic triggers failed
-   (see Troubleshooting). If you see it, press it — the reshuffle runs
-   manually — and then do the log check below to find what broke.
-6. **Want a different world for the next campaign?** The comfortable way:
-   double-click **`randomize_seed_and_play.bat`** in the mod folder (with
-   the game closed) — it writes a fresh random seed and starts HOI4 for
-   you, so **every launch is a new world** with zero manual editing (the
-   seed it picked is shown in the window — note it down for replays; if
-   auto-launch can't find your `hoi4.exe`, fix the `GAME_EXE` path inside
-   the script or just start the game normally). The manual way: open
-   `random_world\common\scripted_effects\rw_world_seed.txt`, change the
-   number (0–999), and **restart HOI4** — the game parses mod files only
-   once, at application launch, so an edit made while it runs is invisible
-   ("Back to Menu → New Game" is not enough). Every number is its own
-   reproducible world. This is an engine necessity, not a quirk: during
-   scenario setup the random generator is deterministic, so lobby-time
-   generation repeats one sequence — the number shifts it.
-   **The no-restart alternative:** comment out the marked five-line block
-   in `common\bookmarks\the_gathering_storm.txt` — the reshuffle then
-   moves to right-after-Play by itself and every New Game differs without
-   restarting the application, at the cost of the lobby preview. The two
-   properties (lobby preview / no-restart variety) are mutually exclusive
-   at engine level — pick per playthrough.
+3. Continue to the map lobby. It shows the normal 1936 world plus the
+   three custom countries on their homes — pick any country and press
+   **START**.
+4. In-game, open the **Decisions** panel: the category **"Random World"**
+   with the decision **"Randomize the World!"** must be there. *(This
+   doubles as the mod-loaded check: no category = mod not active.)* Press
+   it whenever you like — it is free. The game freezes for a few seconds
+   while the script divides the planet, and then: a patchwork world, no
+   grey/unowned land, every country a random ideology, the custom
+   countries somewhere random too. Because this runs in-session, **every
+   campaign gives a different world**.
+5. Sanity checks: the diplomacy screen offers no faction actions; open any
+   state — building **slots** and **population** are vanilla; built
+   factories are re-rolled with a floor of **2 civilian + 2 military** per
+   state. The decision and its category disappear after use and never
+   return in this campaign, not even after save/load.
+6. **Optional alternative — generate the world before country selection**
+   (useful for multiplayer, where everyone picks on the finished map):
+   uncomment the marked five-line block in
+   `common\bookmarks\the_gathering_storm.txt`. Engine trade-off: at that
+   moment the random generator is deterministic, so the world is fixed by
+   the number in `common\scripted_effects\rw_world_seed.txt` — same number
+   = same world (a feature for MP sync and replays), new world = new
+   number **+ full HOI4 restart** (the game reads mod files only at
+   launch). `randomize_seed_and_play.bat` in the mod root automates that:
+   run it while the game is closed and it writes a random seed and starts
+   HOI4 for you.
 
 **Where the logs are** (your best friends when something is off):
 `Documents\Paradox Interactive\Hearts of Iron IV\logs\` —
@@ -260,17 +254,16 @@ If a number differs, change it in **two places** (both are commented):
 
 Everything lives in `random_world_scripted_effects.txt` (heavily commented);
 this is the same story without code. The **faction ban** (step 1) runs by
-itself every time a session starts. Steps 2–11 run once per campaign from
-the 1936 scenario's `effect` block during setup — before the lobby. Setup
-randomness is deterministic, so the script first "burns" as many throwaway
-random draws as the number in `rw_world_seed.txt` says — shifting the whole
-sequence and thereby selecting which world gets built. (If that trigger is
-commented out, `on_startup` fires the reshuffle right after Play instead —
-fresh world per launch — and the Decisions-panel button remains as a
-dormant last resort.) Separately, the three custom countries receive their
-home states during map setup via their `history/countries` files — that
-brief ownership is what brings them into existence so the reshuffle can
-include them in the pool.
+itself every time a session starts. Steps 2–11 run once per campaign when
+you press the **"Randomize the World!"** decision — in-session, where the
+random generator is fresh every time, hence a different world per campaign.
+(The optional lobby-time trigger in `common/bookmarks/` runs the same steps
+during scenario setup instead; there the generator is deterministic, and
+the script first "burns" as many throwaway draws as `rw_world_seed.txt`
+says, which is how the seed number selects the world.) Separately, the
+three custom countries receive their home states during map setup via
+their `history/countries` files — that ownership is what brings them into
+existence so the reshuffle can include them in the pool.
 
 1. **Ban factions.** Whoever leads a faction dismantles it; then every
    country gets two permanent "country rules" that grey out *Create Faction*
@@ -337,10 +330,10 @@ starting borders.
 | `common/country_tags/01_random_world_tags.txt` | "NES, KAM, KHA exist." |
 | `common/countries/*.txt` | Per country: unit-art style + fallback color. |
 | `common/countries/colors.txt` | Map colors — **you** build it in Step 3. |
-| `common/bookmarks/the_gathering_storm.txt` | Overrides the 1936 scenario: removes the featured majors and auto-runs the randomizer while the scenario loads. |
+| `common/bookmarks/the_gathering_storm.txt` | Overrides the 1936 scenario: removes the featured majors; also holds the optional (disabled) lobby-time randomizer trigger. |
 | `common/bookmarks/blitzkrieg.txt` | Deliberately empty: erases the 1939 scenario from New Game. |
-| `common/decisions/categories/…` | The "Random World" folder in the Decisions panel (fallback only). |
-| `common/decisions/random_world_decisions.txt` | Fallback one-shot "Randomize the World!" button — appears only if the scenario override failed to load. |
+| `common/decisions/categories/…` | The "Random World" folder in the Decisions panel. |
+| `common/decisions/random_world_decisions.txt` | **The trigger:** one-shot, free "Randomize the World!" button (player-only; AI never presses it). |
 | `common/on_actions/ZZ_random_world_on_actions.txt` | "At every session start ban factions; every week re-ban them." |
 | `common/scripted_effects/random_world_scripted_effects.txt` | The entire algorithm (sections 0–12, commented). |
 | `common/scripted_effects/rw_world_seed.txt` | The one number that selects **which** world is generated — edit for a new world, keep to replay one. |
@@ -359,11 +352,10 @@ starting borders.
 | **Mod seems to have no effect in-game** (no custom countries on the map, no "Random World" decision) | The mod is not actually loading. Check, in order: (1) it is **ticked in the active playset** (top of the launcher — the playset selected there is what launches); (2) the folder is exactly `mod\random_world` with `descriptor.mod` **directly** inside it — a very common mistake is a nested `mod\random_world\random_world\…`; (3) you started a **new** game, not an old save from before the mod; (4) `error.log` after launch — a syntax typo can make the game silently drop a file. |
 | Decision pressed but nothing changed | Impossible in a loaded mod — but check `game.log` for the `[RW]` lines; if they stop at some phase, `error.log` names the guilty line (see the substitution table below). |
 | **Still two scenarios** on New Game, or the majors' portraits are still there | Your game version names its bookmark files differently, so the override didn't attach. Open the **game's** `common\bookmarks\` folder and rename the mod's two files to match the vanilla names exactly. |
-| The lobby map is not randomized, only the world after pressing Play | The bookmark trigger block is commented out (that's the optional fresh-world mode), or the bookmark override didn't attach — see the filename row above. |
-| **The same randomized world appears in every campaign** | Expected in lobby mode — setup randomness is deterministic by engine design. Change the number in `common/scripted_effects/rw_world_seed.txt` **and restart HOI4** (mod files are parsed only at application launch); every number is a different world. |
-| Changed the seed number but the world stayed the same | You didn't restart HOI4 — the game cannot see file edits made while it is running. Quit to desktop, relaunch, then New Game. |
-| The "Random World" decision category IS visible in-game | Both automatic triggers failed to execute — almost always "the mod's script files aren't loading at all". Press the decision if it works, then run the log check below. |
-| **World not randomized at all** — not in the lobby and not after pressing Play | Run **the 60-second log check** below; it pinpoints the broken link. |
+| The "Random World" decision category is missing in-game | The mod isn't loading (see the rows above), or the world was already randomized in this campaign — the category hides itself after use. |
+| **Pressed the decision, world not randomized** | Run **the 60-second log check** below; it pinpoints the broken link. |
+| *(lobby mode only)* The same world appears in every campaign | Expected — setup randomness is deterministic by engine design. Change the number in `common/scripted_effects/rw_world_seed.txt` **and restart HOI4** (mod files are parsed only at application launch), or run `randomize_seed_and_play.bat`. |
+| *(lobby mode only)* Changed the seed number but the world stayed the same | You didn't restart HOI4 — the game cannot see file edits made while it is running. Quit to desktop, relaunch, then New Game. |
 
 **The 60-second log check.** Start a new game, reach the map, quit to
 desktop. Open `Documents\Paradox Interactive\Hearts of Iron IV\logs\game.log`
@@ -377,11 +369,12 @@ and search for `[RW]`:
    missing from the pre-game map is the same disease — they come from plain
    history files and need no scripts at all.
 2. **`on_startup fired` present, but no `world randomization: START`** —
-   either your mod files are older than v1.5 (update them), or `error.log`
-   shows `Invalid Scope ... provided: None` on the calling line — that
-   means a scripted-effect call sits in a scope-less context and must be
-   wrapped in `random_country = { ... }` (v1.5 already does this for both
-   automatic triggers; re-apply it if you edited those files).
+   normal **until you press the decision**. If you DID press it and START
+   is still missing, check `error.log` for
+   `Invalid Scope ... provided: None` on the calling line — a
+   scripted-effect call sitting in a scope-less context must be wrapped in
+   `random_country = { ... }` (decisions run in country scope, so the stock
+   decision never hits this; it can only appear if you moved the call).
 3. **`START` present but no `DONE`** — the script died mid-way on a keyword
    your game version spells differently; `error.log` names the exact file
    and line. Fix it with the substitution table below.
@@ -413,12 +406,12 @@ the line `error.log` complains about and try the replacement:
 ## Part 10 — FAQ and honest limitations
 
 - **Achievements** are disabled with any mod. Nothing to do about it.
-- **You pick your country on the already-randomized lobby map.** The
-  classic bookmark screen with major portraits is gone (only "Other
-  countries" remains), and the 1939 scenario is removed. One world per
-  seed number — swap the number in `rw_world_seed.txt` between campaigns
-  for variety; identical numbers give identical worlds (a feature: replays
-  and multiplayer sync for free).
+- **You pick your country first; the world transforms when you press the
+  decision.** The classic bookmark screen with major portraits is gone
+  (only "Other countries" remains), and the 1939 scenario is removed.
+  Every campaign's reshuffle is fresh. If you'd rather pick countries on
+  the finished map (e.g. multiplayer), enable the lobby-time trigger —
+  Part 6, item 6 — and accept its fixed-seed determinism.
 - **Armies at randomization** may teleport: units standing on land that
   changed hands get auto-relocated by the engine. Harmless, settles
   immediately.

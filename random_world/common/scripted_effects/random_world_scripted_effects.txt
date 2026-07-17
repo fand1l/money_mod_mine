@@ -45,13 +45,11 @@
 #    alone also runs automatically at every session start via on_startup.
 # ==============================================================================
 rw_randomize_world = {
-	# The "done" flag is set HERE, not by the callers. Trigger layers, all
-	# guarded by this flag: bookmark effect (default - during scenario
-	# setup, BEFORE the lobby; which world appears is chosen by the number
-	# in rw_world_seed.txt) -> on_startup (fires instead if the bookmark
-	# layer is commented out or failed to load: fresh world per launch,
-	# applied right after pressing Play) -> manual decision (last-resort
-	# fallback). Whichever layer runs first wins; the rest no-op.
+	# The "done" flag is set HERE, not by the callers, and every trigger is
+	# guarded by it. The PRIMARY trigger is the "Randomize the World!"
+	# decision (in-session -> fresh world every campaign). An optional
+	# lobby-time trigger sits disabled in common/bookmarks/ (deterministic:
+	# world chosen by rw_world_seed.txt). Whichever runs first wins.
 	set_global_flag = rw_world_randomized
 	log = "[RW] world randomization: START"
 	rw_set_world_seed = yes
@@ -721,9 +719,13 @@ rw_make_neutral = {
 # ------------------------------------------------------------------------------
 # For every state we OVERWRITE the number of already-built factories with a
 # random roll (set_building_level sets the exact count, replacing vanilla):
-#   - civilian factories  (industrial_complex): 0-8, most often 1-3
-#   - military factories  (arms_factory):       0-6, most often 0-2
+#   - civilian factories  (industrial_complex): 2-8, most often 2-4
+#   - military factories  (arms_factory):       2-6, most often 2-3
 #   - naval dockyards     (dockyard):           0-5, COASTAL STATES ONLY
+# The floor of 2 is intentional ("minimum industry: 2 civilian + 2 military
+# factories") - since every country owns at least one state, every country
+# is guaranteed a working economy. In small states the game clamps the
+# roll to the state's slot limit; the limit itself is never modified.
 #
 # In a random_list the numbers on the left are relative chances (they sum to
 # 100 here, so you can read them as percentages).
@@ -735,20 +737,18 @@ rw_make_neutral = {
 rw_randomize_industry = {
 	every_state = {
 		random_list = {
-			15 = { set_building_level = { type = industrial_complex level = 0 instant_build = yes } }
-			25 = { set_building_level = { type = industrial_complex level = 1 instant_build = yes } }
-			20 = { set_building_level = { type = industrial_complex level = 2 instant_build = yes } }
-			15 = { set_building_level = { type = industrial_complex level = 3 instant_build = yes } }
-			10 = { set_building_level = { type = industrial_complex level = 4 instant_build = yes } }
-			10 = { set_building_level = { type = industrial_complex level = 5 instant_build = yes } }
+			30 = { set_building_level = { type = industrial_complex level = 2 instant_build = yes } }
+			25 = { set_building_level = { type = industrial_complex level = 3 instant_build = yes } }
+			20 = { set_building_level = { type = industrial_complex level = 4 instant_build = yes } }
+			12 = { set_building_level = { type = industrial_complex level = 5 instant_build = yes } }
+			8  = { set_building_level = { type = industrial_complex level = 6 instant_build = yes } }
 			5  = { set_building_level = { type = industrial_complex level = 8 instant_build = yes } }
 		}
 		random_list = {
-			25 = { set_building_level = { type = arms_factory level = 0 instant_build = yes } }
-			25 = { set_building_level = { type = arms_factory level = 1 instant_build = yes } }
-			20 = { set_building_level = { type = arms_factory level = 2 instant_build = yes } }
-			15 = { set_building_level = { type = arms_factory level = 3 instant_build = yes } }
-			10 = { set_building_level = { type = arms_factory level = 4 instant_build = yes } }
+			35 = { set_building_level = { type = arms_factory level = 2 instant_build = yes } }
+			30 = { set_building_level = { type = arms_factory level = 3 instant_build = yes } }
+			20 = { set_building_level = { type = arms_factory level = 4 instant_build = yes } }
+			10 = { set_building_level = { type = arms_factory level = 5 instant_build = yes } }
 			5  = { set_building_level = { type = arms_factory level = 6 instant_build = yes } }
 		}
 		if = {
