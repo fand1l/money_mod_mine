@@ -1,14 +1,14 @@
 # ==============================================================================
 # RANDOM WORLD - FALLBACK activation decision
 # ------------------------------------------------------------------------------
-# Normally you never see this: the world is randomized automatically while
-# the 1936 scenario loads (common/bookmarks/the_gathering_storm.txt sets the
-# global flag, which hides this decision and its whole category).
+# Normally you never see this: the world is randomized automatically by
+# attempt #1 (bookmark effect, before the lobby) or attempt #2 (on_startup,
+# right after pressing Play). rw_randomize_world sets the global flag when
+# it really runs, and that flag hides this decision and its whole category.
 #
-# It exists as a SAFETY NET: if the bookmark override failed to load on your
-# game version (wrong filename - see the note in that file), the flag is
-# never set, the "Random World" category appears in the Decisions panel, and
-# you can still trigger the reshuffle manually:
+# This is ATTEMPT #3, the last-resort SAFETY NET: it can only be visible if
+# BOTH automatic attempts failed to execute (e.g. the mod's script files
+# did not load). In that case you can still trigger the reshuffle manually:
 #
 #   - costs 0 political power, available from day 1;
 #   - fire_only_once + the global flag make it strictly one-shot per
@@ -35,7 +35,6 @@ RW_random_world_category = {
 		}
 
 		complete_effect = {
-			set_global_flag = rw_world_randomized
 			rw_randomize_world = yes
 		}
 	}

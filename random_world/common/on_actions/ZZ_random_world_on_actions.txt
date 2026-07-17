@@ -4,15 +4,16 @@
 # "on_actions" are hooks the game itself calls at fixed moments.
 #
 #   on_startup  - runs when a game session starts AND every time a save is
-#                 loaded. Since v1.1 it only enforces the faction ban (which
-#                 is idempotent - applying it twice changes nothing), so it
-#                 needs no guard flag.
-#
-#                 THE WORLD RANDOMIZATION IS NO LONGER STARTED HERE.
-#                 It is triggered manually, once per campaign, from the
-#                 decisions panel - see common/decisions/. This also makes a
-#                 great "is the mod loaded?" check: if you can see the
-#                 "Randomize the World!" decision, the mod is active.
+#                 loaded. It does three things:
+#                   1. writes an [RW] line to game.log unconditionally - the
+#                      definitive "is the mod loaded at all?" probe;
+#                   2. enforces the faction ban (idempotent, no guard needed);
+#                   3. ATTEMPT #2 (of 3) to run the world reshuffle: if the
+#                      bookmark effect (attempt #1, before the lobby) was
+#                      inert on this engine build, this fires it at session
+#                      start - i.e. right after pressing Play. The flag set
+#                      inside rw_randomize_world keeps it strictly one-shot
+#                      per campaign, including across save loads.
 #
 #   on_weekly   - runs for EVERY country once each in-game week. We use it to
 #                 re-apply the "no factions" rules, so countries that are
@@ -27,7 +28,12 @@ on_actions = {
 
 	on_startup = {
 		effect = {
+			log = "[RW] on_startup fired - mod files are loaded"
 			rw_disable_factions_for_all = yes
+			if = {
+				limit = { NOT = { has_global_flag = rw_world_randomized } }
+				rw_randomize_world = yes
+			}
 		}
 	}
 

@@ -256,3 +256,26 @@ only, and the reshuffle should happen before country selection.
 4. **The decision is now a dormant fallback**: it only appears if the
    bookmark override failed to attach (e.g. renamed vanilla files), since
    the global flag that hides it is set by the bookmark effect.
+
+---
+
+## 10. Follow-up changes (v1.4)
+
+Play-test report: world randomized neither in the lobby nor after starting,
+and the screenshots also showed no custom countries on the pre-game map
+(a script-free history feature) — i.e. the mod likely did not load in that
+session at all. Two fixes regardless:
+
+1. **Fixed a real v1.3 flaw.** The bookmark effect set the "already
+   randomized" flag BEFORE calling the reshuffle; if the call itself was
+   inert in that context, the flag still hid the fallback decision, leaving
+   no path to randomize. The flag is now set inside `rw_randomize_world`
+   itself — only when the reshuffle really starts.
+2. **Three-layer trigger chain**, all guarded by that flag: bookmark
+   `effect` (before the lobby — best case) → `on_startup` (right after
+   pressing Play) → the manual decision (last resort, visible only while
+   the flag is unset). The earliest layer that works on the installed
+   engine build wins; later layers no-op.
+3. **`on_startup` now always logs** `[RW] on_startup fired` — the
+   definitive "is the mod loaded at all?" probe.
+4. GUIDE: added "The 60-second log check" diagnostic ladder.

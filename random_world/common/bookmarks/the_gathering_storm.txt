@@ -10,11 +10,12 @@
 #      straight to picking a country on the map.
 #   2. default_country = "---" (= "other countries"). If your error.log ever
 #      complains about it, replace "---" with any tag, e.g. NES.
-#   3. The effect block below runs when the scenario is set up - BEFORE the
-#      map lobby where you pick your country - so the whole world is already
-#      randomized while you choose. The global flag makes it one-shot and
-#      also hides the fallback decision (see common/decisions/) which stays
-#      dormant unless this file failed to load on your game version.
+#   3. The effect block below is ATTEMPT #1 (of 3) to run the reshuffle - at
+#      scenario setup, BEFORE the map lobby, so ideally you pick a country
+#      on an already-randomized map. If this attempt is inert on your engine
+#      build, attempt #2 (on_startup - right after pressing Play) and
+#      attempt #3 (the manual decision) take over automatically: the guard
+#      flag is set inside rw_randomize_world itself, only when it really ran.
 #
 # IMPORTANT: if your game version names this file differently, the override
 # will not load. Open the GAME's folder common/bookmarks/ and make sure the
@@ -39,7 +40,6 @@ bookmarks = {
 			randomize_weather = 22345 # <- DO NOT REMOVE
 			if = {
 				limit = { NOT = { has_global_flag = rw_world_randomized } }
-				set_global_flag = rw_world_randomized
 				rw_randomize_world = yes
 			}
 		}

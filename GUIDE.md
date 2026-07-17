@@ -219,16 +219,16 @@ If a number differs, change it in **two places** (both are commented):
    a random ideology; the diplomacy screen offers no faction actions; open
    any state — building **slots** and **population** are vanilla, only the
    built factories differ.
-5. You should **never** see a "Random World" decision category — it is a
-   fallback that only appears if the scenario override failed to load
-   (see Troubleshooting). If you see it, the auto-randomization did not
-   run; press the decision to reshuffle manually and then fix the bookmark
-   filenames.
+5. You should **never** see a "Random World" decision category — it is the
+   last-resort fallback that only appears if BOTH automatic triggers failed
+   (see Troubleshooting). If you see it, press it — the reshuffle runs
+   manually — and then do the log check below to find what broke.
 6. **One honest caveat:** the exact moment the engine runs a scenario's
    `effect` block is version-dependent. If on your build the lobby map
-   still shows the historic world, the reshuffle happens right after you
-   press Play instead — same result, just after selection rather than
-   before. Nothing to fix; that is the engine's limit.
+   still shows the historic world, the `on_startup` fallback fires the
+   reshuffle **right after you press Play** instead — same result, just
+   after selection rather than before. Nothing to fix; that is the
+   engine's limit.
 
 **Where the logs are** (your best friends when something is off):
 `Documents\Paradox Interactive\Hearts of Iron IV\logs\` —
@@ -333,8 +333,30 @@ starting borders.
 | **Mod seems to have no effect in-game** (no custom countries on the map, no "Random World" decision) | The mod is not actually loading. Check, in order: (1) it is **ticked in the active playset** (top of the launcher — the playset selected there is what launches); (2) the folder is exactly `mod\random_world` with `descriptor.mod` **directly** inside it — a very common mistake is a nested `mod\random_world\random_world\…`; (3) you started a **new** game, not an old save from before the mod; (4) `error.log` after launch — a syntax typo can make the game silently drop a file. |
 | Decision pressed but nothing changed | Impossible in a loaded mod — but check `game.log` for the `[RW]` lines; if they stop at some phase, `error.log` names the guilty line (see the substitution table below). |
 | **Still two scenarios** on New Game, or the majors' portraits are still there | Your game version names its bookmark files differently, so the override didn't attach. Open the **game's** `common\bookmarks\` folder and rename the mod's two files to match the vanilla names exactly. |
-| Everything works but the lobby map is NOT randomized (reshuffle happens after pressing Play) | Your engine build runs the scenario `effect` block at session start instead of scenario load. Same result, later moment — engine limitation, nothing to fix. |
-| The "Random World" decision category IS visible in-game | The scenario override didn't load (see the bookmark-filename row above) — the decision is the built-in fallback; use it, then fix the filenames. |
+| Everything works but the lobby map is NOT randomized (reshuffle happens right after pressing Play) | Your engine build ignores scenario `effect` blocks at load time, so the `on_startup` fallback fires instead. Same result, later moment — engine limitation, nothing to fix. |
+| The "Random World" decision category IS visible in-game | Both automatic triggers failed to execute — almost always "the mod's script files aren't loading at all". Press the decision if it works, then run the log check below. |
+| **World not randomized at all** — not in the lobby and not after pressing Play | Run **the 60-second log check** below; it pinpoints the broken link. |
+
+**The 60-second log check.** Start a new game, reach the map, quit to
+desktop. Open `Documents\Paradox Interactive\Hearts of Iron IV\logs\game.log`
+and search for `[RW]`:
+
+1. **No `[RW]` lines at all** (not even `on_startup fired`) — the mod is not
+   loading, full stop. This is launcher/folder territory: is the mod ticked
+   in the **active** playset? Is the folder exactly
+   `mod\random_world\descriptor.mod` (not nested twice)? Did the launcher
+   re-verify the playset after you replaced files? The custom countries
+   missing from the pre-game map is the same disease — they come from plain
+   history files and need no scripts at all.
+2. **`on_startup fired` present, but no `world randomization: START`** —
+   your mod files are older than v1.4 (since v1.4 `on_startup` itself
+   launches the reshuffle). Update the mod files.
+3. **`START` present but no `DONE`** — the script died mid-way on a keyword
+   your game version spells differently; `error.log` names the exact file
+   and line. Fix it with the substitution table below.
+4. **`START` and `DONE` present but the map looks vanilla** — the claims
+   loop ran but the actual ownership transfer is failing silently; apply
+   the `transfer_state = PREV` row of the substitution table.
 | Countries turned grey on the map | Your `colors.txt` copy is broken — redo Part 4 (copy vanilla file again, paste snippet at the very bottom, nothing else changed). |
 | Checkerboard instead of a flag | A `.tga` is missing/renamed in `gfx/flags` (all three sizes must exist). |
 | `NES`/`KAM`/`KHA` show as raw text instead of names | Localisation file lost its BOM or the `english` folder name is wrong. Re-copy `random_world_l_english.yml` from this repo. |
