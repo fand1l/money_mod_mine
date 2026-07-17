@@ -229,14 +229,19 @@ If a number differs, change it in **two places** (both are commented):
    (see Troubleshooting). If you see it, press it — the reshuffle runs
    manually — and then do the log check below to find what broke.
 6. **Want a different world for the next campaign?** Open
-   `random_world\common\scripted_effects\rw_world_seed.txt` and change the
-   number — every number is its own reproducible world. This is an engine
-   necessity, not a quirk: during scenario setup the random generator is
-   deterministic, so lobby-time generation repeats one sequence — the
-   number shifts it. (Prefer automatic variety and don't care about the
-   lobby preview? Comment out the marked five-line block in
-   `common\bookmarks\the_gathering_storm.txt` — the reshuffle then moves to
-   right-after-Play by itself and differs every launch.)
+   `random_world\common\scripted_effects\rw_world_seed.txt`, change the
+   number, and **restart HOI4** — the game parses mod files only once, at
+   application launch, so an edit made while it runs is invisible
+   ("Back to Menu → New Game" is not enough). Every number is its own
+   reproducible world. This is an engine necessity, not a quirk: during
+   scenario setup the random generator is deterministic, so lobby-time
+   generation repeats one sequence — the number shifts it.
+   **The no-restart alternative:** comment out the marked five-line block
+   in `common\bookmarks\the_gathering_storm.txt` — the reshuffle then
+   moves to right-after-Play by itself and every New Game differs without
+   restarting the application, at the cost of the lobby preview. The two
+   properties (lobby preview / no-restart variety) are mutually exclusive
+   at engine level — pick per playthrough.
 
 **Where the logs are** (your best friends when something is off):
 `Documents\Paradox Interactive\Hearts of Iron IV\logs\` —
@@ -348,7 +353,8 @@ starting borders.
 | Decision pressed but nothing changed | Impossible in a loaded mod — but check `game.log` for the `[RW]` lines; if they stop at some phase, `error.log` names the guilty line (see the substitution table below). |
 | **Still two scenarios** on New Game, or the majors' portraits are still there | Your game version names its bookmark files differently, so the override didn't attach. Open the **game's** `common\bookmarks\` folder and rename the mod's two files to match the vanilla names exactly. |
 | The lobby map is not randomized, only the world after pressing Play | The bookmark trigger block is commented out (that's the optional fresh-world mode), or the bookmark override didn't attach — see the filename row above. |
-| **The same randomized world appears in every campaign** | Expected in lobby mode — setup randomness is deterministic by engine design. Change the number in `common/scripted_effects/rw_world_seed.txt`; every number is a different world. |
+| **The same randomized world appears in every campaign** | Expected in lobby mode — setup randomness is deterministic by engine design. Change the number in `common/scripted_effects/rw_world_seed.txt` **and restart HOI4** (mod files are parsed only at application launch); every number is a different world. |
+| Changed the seed number but the world stayed the same | You didn't restart HOI4 — the game cannot see file edits made while it is running. Quit to desktop, relaunch, then New Game. |
 | The "Random World" decision category IS visible in-game | Both automatic triggers failed to execute — almost always "the mod's script files aren't loading at all". Press the decision if it works, then run the log check below. |
 | **World not randomized at all** — not in the lobby and not after pressing Play | Run **the 60-second log check** below; it pinpoints the broken link. |
 
