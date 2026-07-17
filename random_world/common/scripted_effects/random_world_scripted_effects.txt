@@ -40,7 +40,9 @@
 
 
 # ==============================================================================
-# 0. MASTER SWITCH - called once from on_startup
+# 0. MASTER SWITCH - fired once per campaign by the "Randomize the World!"
+#    decision (common/decisions/random_world_decisions.txt). The faction ban
+#    alone also runs automatically at every session start via on_startup.
 # ==============================================================================
 rw_randomize_world = {
 	log = "[RW] world randomization: START"
@@ -167,29 +169,39 @@ rw_claim_this_state = {
 # ------------------------------------------------------------------------------
 # The three custom countries do NOT get a random start - they seed on their
 # real-world locations (per design), and only their further growth is random.
+# Since v1.1 they already OWN these home states on the 1936 starting map
+# (given to them by their history/countries files), so "seeding" here simply
+# confirms the state they are standing on and records it as their capital.
 #
 #           >>>>>  THE ONLY NUMBERS YOU MAY NEED TO EDIT  <<<<<
 #
 # A "state id" is just a number the game gives every state. The defaults
 # below are the vanilla states covering these regions:
-#   196 = "Vinnytsia / Podillia" area  -> home of Nesterivtsi AND Kamianets
-#         (both real places sit in today's Khmelnytskyi oblast, which vanilla
-#         folds into this one state)
-#   198 = "Kharkov" area              -> home of Kharkiv
+#   196 = "Vinnytsia / Podillia" area -> home of Nesterivtsi. NOTE: the real
+#         Kamianets-Podilskyi lies in this SAME vanilla state, and one state
+#         can only have one owner on the starting map...
+#   78  = ...so Kamianets starts on the nearest neighboring state: Khotyn /
+#         northern Bessarabia, directly across the Dniester river from the
+#         real Kamianets-Podilskyi. If YOUR game version has a separate
+#         "Kamenets-Podolsk" state, put its id here instead.
+#   198 = "Kharkov" area -> home of Kharkiv.
 #
-# HOW TO VERIFY ON YOUR GAME VERSION (2 minutes, see GUIDE.md step 4):
+# HOW TO VERIFY ON YOUR GAME VERSION (2 minutes, see GUIDE.md Part 5):
 #   in-game console (~ key) -> type  tdebug  -> hover the region on the map ->
 #   the tooltip shows "State ID". Or search the game's history/states folder
 #   for "Vinnitsa"/"Kharkov" - the number at the top of the file is the id.
 #
-# Nesterivtsi and Kamianets share one vanilla state, and that is fine:
-# whoever seeds second finds its home taken and automatically takes a free
-# NEIGHBORING state instead (see rw_seed_at_home_state below). If your game
-# version has a separate "Kamenets-Podolsk" state, put its id on the KAM line.
+# IF YOU CHANGE A NUMBER HERE, change the SAME number in that country's file
+# under history/countries/ (both the "capital = X" and "transfer_state = X"
+# and "add_state_core = X" lines), so the starting map matches the seeds.
+#
+# Collisions are still handled automatically as a safety net: if a home state
+# is somehow already claimed, the latecomer takes a free NEIGHBORING state
+# (see rw_seed_at_home_state below).
 # ==============================================================================
 rw_seed_custom_countries = {
-	NES = { set_variable = { rw_home_state = 196 } }	# Podillia
-	KAM = { set_variable = { rw_home_state = 196 } }	# southern Khmelnytskyi region
+	NES = { set_variable = { rw_home_state = 196 } }	# Podillia (Vinnytsia state)
+	KAM = { set_variable = { rw_home_state = 78 } }	# Khotyn/Bessarabia, next door to Kamianets-Podilskyi
 	KHA = { set_variable = { rw_home_state = 198 } }	# Kharkiv region
 
 	NES = { rw_seed_at_home_state = yes }
@@ -241,10 +253,11 @@ rw_seed_at_home_state = {
 # ==============================================================================
 # 6. BUILD THE POOL
 # ------------------------------------------------------------------------------
-# The pool = every country that exists right now. The custom countries were
-# seeded in phase 5, so they own a state and therefore exist -> they are
-# automatically included. Countries that do NOT exist in 1936 (releasable
-# nations like vanilla Ukraine) are not in the pool - exactly as intended.
+# The pool = every country that exists right now. The custom countries own
+# their home states from the very start of the game (and phase 5 confirmed
+# them as seeds), so they exist -> they are automatically included.
+# Countries that do NOT exist in 1936 (releasable nations like vanilla
+# Ukraine) are not in the pool - exactly as intended.
 #
 # THE "PROTECTED STATE" TRICK (important, subtle):
 # In the next phase every pool country receives a random seed state anywhere
@@ -265,19 +278,16 @@ rw_build_pool = {
 	every_country = {
 		limit = { exists = yes }
 		set_country_flag = rw_pool_member
-		set_variable = { rw_size = 0 }
 		add_to_array = { array = global.rw_pool value = THIS.id }
 		add_to_variable = { global.rw_pool_size = 1 }
 		random_owned_state = {
 			set_variable = { rw_protected = 1 }
 		}
 	}
-	# Custom countries already claimed their seed before this ran, so their
-	# rw_size was reset to 0 by the line above - restore it (they own exactly
-	# their 1 seed state at this point).
-	NES = { set_variable = { rw_size = 1 } }
-	KAM = { set_variable = { rw_size = 1 } }
-	KHA = { set_variable = { rw_size = 1 } }
+	# Note on sizes: an unset variable counts as 0 in HOI4, so vanilla
+	# countries start this phase with rw_size = 0 automatically, while the
+	# custom countries already carry rw_size = 1 from their seed claim in
+	# phase 5. No manual bookkeeping needed.
 
 	set_variable = { global.rw_target_size = global.rw_total_states }
 	divide_variable = { global.rw_target_size = global.rw_pool_size }

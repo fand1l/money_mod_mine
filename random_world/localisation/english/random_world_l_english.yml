@@ -32,3 +32,7 @@
  KHA_democratic_DEF:0 "the Kharkiv Democratic Republic"
  KHA_communism:0 "Kharkiv Socialist Republic"
  KHA_communism_DEF:0 "the Kharkiv Socialist Republic"
+ RW_random_world_category:0 "Random World"
+ RW_random_world_category_desc:0 "The fate of the entire planet is decided here, once per campaign."
+ RW_randomize_world_now:0 "Randomize the World!"
+ RW_randomize_world_now_desc:0 "Dismantle all factions, free every subject, end every war - and redistribute the ENTIRE world. Every country grows from a random seed state until the whole map is divided into roughly equal nations; the three custom countries grow from their historic homes. Ideologies and built factories are re-rolled everywhere. Building slots and population stay untouched. This takes a few seconds and CANNOT be undone."

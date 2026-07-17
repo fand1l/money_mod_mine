@@ -1,11 +1,16 @@
 # Starting setup for KAM (Kamianets). See the NES file for comments.
-# capital = 196: vanilla folds the southern Khmelnytskyi region (Kamianets-
-# Podilskyi) into the same Podillia state as Nesterivtsi. The randomizer
-# resolves the collision by seeding whoever comes second on a free
-# NEIGHBORING state. If your game version has a separate Kamenets-Podolsk
-# state, put its id here AND in rw_seed_custom_countries.
+#
+# WHY 78 AND NOT 196: vanilla folds the southern Khmelnytskyi region
+# (Kamianets-Podilskyi) into the SAME Podillia state (196) as Nesterivtsi,
+# and one state can only have one owner on the starting map. So Kamianets
+# starts on the nearest neighboring state instead: 78 = Khotyn / northern
+# Bessarabia, directly across the Dniester river from the real
+# Kamianets-Podilskyi. If your game version has a separate Kamenets-Podolsk
+# state, put its id here (all three lines) AND in rw_seed_custom_countries.
 
-capital = 196
+capital = 78
+transfer_state = 78
+add_state_core = 78
 
 oob = "KAM_1936"
 

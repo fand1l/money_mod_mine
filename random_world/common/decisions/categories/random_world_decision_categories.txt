@@ -1,0 +1,20 @@
+# ==============================================================================
+# RANDOM WORLD - decision category
+# ------------------------------------------------------------------------------
+# Decisions in HOI4 are grouped into categories (the folders you see in the
+# Decisions panel). This file creates our own category; the decision itself
+# lives in common/decisions/random_world_decisions.txt.
+# The category is visible until the world has been randomized, then it
+# disappears for the rest of the campaign.
+# ==============================================================================
+
+RW_random_world_category = {
+	icon = generic_political_actions
+	priority = 1000
+
+	allowed = { always = yes }
+
+	visible = {
+		NOT = { has_global_flag = rw_world_randomized }
+	}
+}

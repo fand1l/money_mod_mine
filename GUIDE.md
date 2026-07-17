@@ -4,15 +4,20 @@ This guide assumes you have **never modded a game and never seen code**.
 Follow it top to bottom. Nothing here requires programming — only copying
 files, and (once) pasting a small text block and checking three numbers.
 
-**What the mod does** when you start a new game:
+**What the mod does:**
 
 - Factions are gone forever. Nobody can create or join one — not you, not the AI.
-- Three new countries exist next to all the normal ones: **Nesterivtsi**,
-  **Kamianets** and **Kharkiv** (all from Ukraine, sitting on their real homes).
-- The **whole world map is reshuffled**: every country starts from one random
-  state and grows outward into neighboring land until the entire world is
-  divided, with everyone roughly the same size. No state is left unowned.
-  The three custom countries start growing from their historic homes.
+- Three new countries **sit on the starting map with their own borders**,
+  next to all the normal ones: **Nesterivtsi**, **Kamianets** and **Kharkiv**
+  (all on/next to their real Ukrainian homes). You can even pick and play
+  them from the country-selection screen.
+- When **you** press the decision **"Randomize the World!"** (Decisions
+  panel → *Random World* category — available from day 1, free, once per
+  campaign), the **whole world map is reshuffled**: every country starts
+  from one random state and grows outward into neighboring land until the
+  entire world is divided, with everyone roughly the same size. No state is
+  left unowned. The three custom countries grow from their historic homes.
+  The AI never presses this button — the timing is entirely yours.
 - Every country gets a **random ideology** (fascist / communist / democratic /
   non-aligned) — names like "Nesterivtsi Reich" or "Communist Nesterivtsi"
   appear automatically.
@@ -102,8 +107,12 @@ Documents\Paradox Interactive\Hearts of Iron IV\mod\random_world\
 │   │   ├── Nesterivtsi.txt                 ← art style + fallback color per country
 │   │   ├── Kamianets.txt
 │   │   └── Kharkiv.txt                     ← (you will add colors.txt here in Step 3)
+│   ├── decisions\
+│   │   ├── categories\
+│   │   │   └── random_world_decision_categories.txt  ← the "Random World" decisions folder
+│   │   └── random_world_decisions.txt      ← the "Randomize the World!" button
 │   ├── on_actions\
-│   │   └── ZZ_random_world_on_actions.txt  ← hooks: run randomizer at start, re-ban factions weekly
+│   │   └── ZZ_random_world_on_actions.txt  ← hooks: ban factions at start + weekly
 │   └── scripted_effects\
 │       └── random_world_scripted_effects.txt  ← THE BRAIN: all randomizer logic
 ├── history\
@@ -151,9 +160,11 @@ ugly auto-color on the map.
 ## Part 5 — Step 4: Check three numbers (the historic home states)
 
 Every state on the map has an **ID number**. The custom countries are pinned
-to their historic homes through three numbers in one file. The defaults are
-correct for the vanilla map as we know it, but Paradox occasionally re-splits
-states between patches — so verify once:
+to their historic homes through three numbers. The defaults are correct for
+the vanilla map as we know it, but Paradox occasionally re-splits states
+between patches — so verify once. The good news: since the custom countries
+now have visible borders on the starting map, a wrong ID is impossible to
+miss — the country simply sits in the wrong place.
 
 **The 2-minute check, inside the game:**
 
@@ -161,35 +172,51 @@ states between patches — so verify once:
    press **`** / **~** (the key under Esc) to open the console.
 2. Type `tdebug` and press Enter.
 3. Hover the mouse over **Vinnytsia / Khmelnytskyi area (western Ukraine)** —
-   a tooltip appears; read **STATE ID**. Expected: **196**.
-4. Hover over **Kharkiv (eastern Ukraine)**. Expected: **198**.
-5. Type `tdebug` again to turn the tooltip off.
+   a tooltip appears; read **STATE ID**. Expected: **196** (Nesterivtsi).
+4. Hover just south of it, across the Dniester river (**Khotyn / northern
+   Bessarabia**). Expected: **78** (Kamianets — see the note below).
+5. Hover over **Kharkiv (eastern Ukraine)**. Expected: **198**.
+6. Type `tdebug` again to turn the tooltip off.
 
-If the numbers differ, open
-`random_world\common\scripted_effects\random_world_scripted_effects.txt`,
-find the block marked `THE ONLY NUMBERS YOU MAY NEED TO EDIT` (section 5),
-and put the IDs you saw on the `NES` / `KAM` / `KHA` lines. Change the same
-numbers after `capital =` in the three files under `history\countries\`.
+If a number differs, change it in **two places** (both are commented):
 
-> Why do NES and KAM share the number 196? Both real places lie in one
-> vanilla state. The script is built for this: the first country takes the
-> state, the second automatically starts in a free state next door. If your
-> game version has a separate "Kamenets-Podolsk" state, give KAM that ID.
+- `random_world\common\scripted_effects\random_world_scripted_effects.txt`,
+  block `THE ONLY NUMBERS YOU MAY NEED TO EDIT` (section 5) — the
+  `NES` / `KAM` / `KHA` lines;
+- that country's file in `history\countries\` — the three lines
+  `capital = X`, `transfer_state = X`, `add_state_core = X`.
+
+> **Why is Kamianets on 78 and not 196?** Both real places (Nesterivtsi and
+> Kamianets-Podilskyi) lie inside one and the same vanilla state, 196 — and
+> one state can only have one owner on the starting map. So Nesterivtsi
+> keeps 196, and Kamianets starts on the nearest neighboring state: Khotyn /
+> northern Bessarabia (78), directly across the Dniester from the real
+> Kamianets-Podilskyi. If your game version has a separate
+> "Kamenets-Podolsk" state, give KAM that ID instead — then both sit
+> perfectly.
 
 ## Part 6 — Step 5: Turn it on and test
 
 1. Launcher → **Playsets**: add *Random World - No Factions* to your playset
    and tick it. (Achievements will be disabled — normal for any mod.)
-2. Play → new game, **1936**, pick any country. **Note:** the selection
-   screen still shows the *vanilla* world — the reshuffle happens the moment
-   the session starts. Expect the start to take a few extra seconds: the
-   script is dividing the whole planet.
-3. On the map you should see: a patchwork world; no grey/unowned land
-   anywhere; Nesterivtsi, Kamianets and Kharkiv in/near Ukraine; every
-   country with a random ideology; no factions in the diplomacy screen.
-4. Quick sanity check of the rules we must not break: open any state — its
+2. Play → new game, **1936**. Already on the country-selection map you
+   should see the first proof the mod is loaded: **Nesterivtsi, Kamianets
+   and Kharkiv with their own borders** in and next to Ukraine. Pick any
+   country — even one of them.
+3. In-game, open the **Decisions** panel. You should see the category
+   **"Random World"** with the decision **"Randomize the World!"**.
+   *This is the mod's heartbeat check: decision visible = mod loaded and
+   working. No decision = the mod is not active (see Troubleshooting).*
+4. Click the decision whenever you like (it costs nothing). The game will
+   freeze for a few seconds — the script is dividing the whole planet — and
+   then: a patchwork world, no grey/unowned land anywhere, every country
+   with a random ideology, no factions, the custom countries grown outward
+   from their homes.
+5. Quick sanity check of the rules we must not break: open any state — its
    building **slots** and **population** are vanilla; only the built
    factories differ.
+6. The decision (and its whole category) disappears after use and never
+   comes back in this campaign — not even after save/load.
 
 **Where the logs are** (your best friends when something is off):
 `Documents\Paradox Interactive\Hearts of Iron IV\logs\` —
@@ -200,19 +227,25 @@ numbers after `capital =` in the three files under `history\countries\`.
 
 ## Part 7 — How the world generator actually works (plain words)
 
-Everything happens in `random_world_scripted_effects.txt`, once, at start.
-The file is heavily commented; this is the same story without code:
+Everything lives in `random_world_scripted_effects.txt` (heavily commented);
+this is the same story without code. The **faction ban** (step 1) runs by
+itself every time a session starts; steps 2–11 run once, the moment you
+press **"Randomize the World!"** in the Decisions panel. Separately, the
+three custom countries receive their home states already during map setup
+(three lines in their `history/countries` files) — that is why their borders
+exist before any randomization.
 
 1. **Ban factions.** Whoever leads a faction dismantles it; then every
    country gets two permanent "country rules" that grey out *Create Faction*
    and *Join Faction*. A weekly hook re-applies the rules so countries born
    later (civil wars, released nations) are covered forever.
-2. **Clean the table.** All puppets are freed, the 1936 Italy–Ethiopia war is
-   ended in a white peace. Now land can move without dragging wars around.
+2. **Clean the table.** All puppets are freed, all running wars are ended in
+   white peace. Now land can move without dragging wars around.
 3. **Count the map.** The script counts every land state (that number ÷
    number of countries = the **target size** everyone should reach).
-4. **Seed the custom countries** on their home states. If a home is taken
-   (NES and KAM share one), the latecomer starts next door.
+4. **Seed the custom countries** on their home states — normally just
+   confirming the state each already owns and marking it as the capital.
+   (Safety net: if a home is somehow taken, the latecomer starts next door.)
 5. **Build "the pool"**: the list of every country alive in 1936 plus the
    three customs. Each pool country also secretly *protects* one of its
    current states — random seeds may not land there. This guarantees no
@@ -248,9 +281,11 @@ The file is heavily commented; this is the same story without code:
 | `common/country_tags/01_random_world_tags.txt` | "NES, KAM, KHA exist." |
 | `common/countries/*.txt` | Per country: unit-art style + fallback color. |
 | `common/countries/colors.txt` | Map colors — **you** build it in Step 3. |
-| `common/on_actions/ZZ_random_world_on_actions.txt` | "At game start run the randomizer once; every week re-ban factions." |
+| `common/decisions/categories/…` | The "Random World" folder in the Decisions panel. |
+| `common/decisions/random_world_decisions.txt` | The one-shot "Randomize the World!" button (free, player-only; AI never presses it). |
+| `common/on_actions/ZZ_random_world_on_actions.txt` | "At every session start ban factions; every week re-ban them." |
 | `common/scripted_effects/random_world_scripted_effects.txt` | The entire algorithm (sections 0–12, commented). |
-| `history/countries/TAG - Name.txt` | Custom country's 1936 setup: capital, techs, politics, equipment. |
+| `history/countries/TAG - Name.txt` | Custom country's 1936 setup: capital, **its starting borders** (`transfer_state` + `add_state_core`), techs, politics, equipment. |
 | `history/units/TAG_1936.txt` | Its division blueprint (so it can train troops immediately). |
 | `localisation/english/random_world_l_english.yml` | The names: 4 ideology names per custom country. **Must stay UTF-8 with BOM** (it already is; editors keep it if you just edit and save). |
 | `gfx/flags/…` | Placeholder flags, 3 sizes × 5 variants per tag. |
@@ -261,11 +296,12 @@ The file is heavily commented; this is the same story without code:
 | Symptom | Cause & fix |
 |---|---|
 | Mod not in the launcher | The folder isn't at `...\Hearts of Iron IV\mod\random_world`, or `random_world.mod` (launcher side) is missing — redo Part 2, or use `docs/random_world.mod.example`. |
-| Game starts but world is vanilla | The mod isn't ticked in the **active playset**; or you loaded an old save (the randomizer runs once per *new* campaign only); or `game.log` has no `[RW]` lines → check `error.log` for a typo you may have introduced. |
+| **Mod seems to have no effect in-game** (no custom countries on the map, no "Random World" decision) | The mod is not actually loading. Check, in order: (1) it is **ticked in the active playset** (top of the launcher — the playset selected there is what launches); (2) the folder is exactly `mod\random_world` with `descriptor.mod` **directly** inside it — a very common mistake is a nested `mod\random_world\random_world\…`; (3) you started a **new** game, not an old save from before the mod; (4) `error.log` after launch — a syntax typo can make the game silently drop a file. |
+| Decision pressed but nothing changed | Impossible in a loaded mod — but check `game.log` for the `[RW]` lines; if they stop at some phase, `error.log` names the guilty line (see the substitution table below). |
 | Countries turned grey on the map | Your `colors.txt` copy is broken — redo Part 4 (copy vanilla file again, paste snippet at the very bottom, nothing else changed). |
 | Checkerboard instead of a flag | A `.tga` is missing/renamed in `gfx/flags` (all three sizes must exist). |
 | `NES`/`KAM`/`KHA` show as raw text instead of names | Localisation file lost its BOM or the `english` folder name is wrong. Re-copy `random_world_l_english.yml` from this repo. |
-| Custom countries not in Ukraine | Home-state IDs differ on your game version — do Part 5 and fix the three numbers. |
+| Custom countries visible but in the wrong place | Home-state IDs differ on your game version — do Part 5 and fix the numbers in both files. |
 | Small pause at game start | Normal: the script divides ~all states of the world once. A few seconds on slow PCs. |
 | A few unowned states remain / a phase seems skipped | Open `error.log`. If it names a line in `random_world_scripted_effects.txt`, one effect spelling changed in your patch — see the substitution table below. |
 
@@ -285,10 +321,13 @@ the line `error.log` complains about and try the replacement:
 ## Part 10 — FAQ and honest limitations
 
 - **Achievements** are disabled with any mod. Nothing to do about it.
-- **The country-selection screen shows the old world.** The reshuffle
-  happens after you press Play — the engine gives mods no earlier hook.
-- **Armies on day 1** may teleport: units standing on land that changed hands
-  get auto-relocated by the engine. Harmless, settles immediately.
+- **The selection screen shows the vanilla world plus the three custom
+  countries.** The full reshuffle happens only when you press the decision —
+  that is by design, so you control the timing (and can play a normal-ish
+  start first if you want).
+- **Armies at randomization** may teleport: units standing on land that
+  changed hands get auto-relocated by the engine. Harmless, settles
+  immediately.
 - **Vanilla focus trees** still reference historical geography ("Danzig or
   War" when Germany is in Peru). That's inherent to every randomizer mod;
   national focuses stay usable, some just become nonsense-flavored. The
@@ -307,8 +346,10 @@ Say you want `LVI` — "Lviv". Copy the NES pattern:
    `00_countries.txt`).
 2. `common/countries/Lviv.txt`: copy `Nesterivtsi.txt`, adjust the color.
 3. Your `colors.txt`: append an `LVI = { ... }` block.
-4. `history/countries/LVI - Lviv.txt`: copy the NES file; set `capital =`
-   to Lviv's state ID (find it with `tdebug`); replace `NES` with `LVI`.
+4. `history/countries/LVI - Lviv.txt`: copy the NES file; set Lviv's state
+   ID (find it with `tdebug`) on all three lines — `capital`,
+   `transfer_state`, `add_state_core` — so Lviv has borders on the starting
+   map; replace `NES` with `LVI`.
 5. `history/units/LVI_1936.txt`: copy, done.
 6. Localisation: add `LVI_neutrality`, `LVI_fascism`, `LVI_communism`,
    `LVI_democratic` (+ `_DEF`) lines.

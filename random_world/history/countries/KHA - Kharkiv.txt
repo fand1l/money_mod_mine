@@ -1,7 +1,10 @@
 # Starting setup for KHA (Kharkiv). See the NES file for comments.
-# capital = 198 is the vanilla Kharkov state.
+# capital = 198 is the vanilla Kharkov state; transfer_state/add_state_core
+# put Kharkiv on the starting map with its own borders from day one.
 
 capital = 198
+transfer_state = 198
+add_state_core = 198
 
 oob = "KHA_1936"
 

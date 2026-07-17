@@ -5,11 +5,19 @@
 # only needs sane basics: capital, techs, a division template, some equipment.
 #
 # capital = 196 is the vanilla Podillia/Vinnytsia state - Nesterivtsi's
-# historic home. If you verified a different id (GUIDE.md step 4), change it
-# here AND in rw_seed_custom_countries (scripted effects file).
+# historic home. If you verified a different id (GUIDE.md Part 5), change it
+# here (all three lines below) AND in rw_seed_custom_countries (scripted
+# effects file).
+#
+# transfer_state takes the state from its vanilla owner the moment the game
+# is set up, so Nesterivtsi's borders are ALREADY VISIBLE on the starting
+# map, before any randomization. add_state_core makes that land rightfully
+# theirs (full manpower/industry, no penalties).
 # ==============================================================================
 
 capital = 196
+transfer_state = 196
+add_state_core = 196
 
 oob = "NES_1936"
 

@@ -1,0 +1,44 @@
+# ==============================================================================
+# RANDOM WORLD - the activation decision
+# ------------------------------------------------------------------------------
+# The world reshuffle is started MANUALLY from here (Decisions panel ->
+# "Random World" category -> "Randomize the World!"), by whatever country the
+# human player controls:
+#
+#   - costs 0 political power, available from day 1;
+#   - fire_only_once + the global flag make it strictly one-shot per
+#     campaign (after firing, the decision and its category disappear, and
+#     save/load can never re-run it);
+#   - ai_will_do = 0 means AI countries never press it - only a human
+#     decides when (and whether) the world gets reshuffled.
+#
+# If you prefer the old automatic behavior, move the two lines of
+# complete_effect into the on_startup block of
+# common/on_actions/ZZ_random_world_on_actions.txt (wrapped in the same
+# has_global_flag check) - see GUIDE.md.
+# ==============================================================================
+
+RW_random_world_category = {
+
+	RW_randomize_world_now = {
+		icon = generic_civil_support
+
+		allowed = { always = yes }
+
+		visible = {
+			NOT = { has_global_flag = rw_world_randomized }
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 0
+		}
+
+		complete_effect = {
+			set_global_flag = rw_world_randomized
+			rw_randomize_world = yes
+		}
+	}
+}

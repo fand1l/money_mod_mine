@@ -185,3 +185,29 @@ cores on everything it owns and remove its cores on states it does not own
 1. Commit 1 — this plan.
 2. Commit 2 — full mod (`random_world/`), flag generator + generated flags,
    `GUIDE.md`, `README.md`.
+
+---
+
+## 7. Follow-up changes (v1.1)
+
+Requested after the first release:
+
+1. **Activation moved from `on_startup` to a decision.** The world reshuffle
+   is now fired manually: Decisions panel → category *Random World* →
+   one-shot, zero-cost decision **"Randomize the World!"** (`ai_will_do = 0`,
+   so only a human can press it; the global flag keeps it once-per-campaign).
+   `on_startup` now only enforces the faction ban (idempotent, unguarded).
+   Side benefit: the decision doubles as a "is the mod loaded?" indicator —
+   the original complaint was that the mod showed no visible effect.
+2. **Custom countries have borders on the initial map.** Their
+   `history/countries` files now `transfer_state` + `add_state_core` their
+   home states during map setup, so NES/KAM/KHA are visible and selectable
+   in the lobby before any randomization. Because Nesterivtsi and
+   Kamianets-Podilskyi share one vanilla state (196) and a state has exactly
+   one owner, KAM's default home moved to the adjacent state 78
+   (Khotyn / northern Bessarabia, across the Dniester from the real
+   Kamianets); documented in both files with a note to use a dedicated
+   Kamenets-Podolsk state id if the installed version has one.
+   The randomizer's dynamic collision fallback remains as a safety net, and
+   `rw_build_pool` was simplified: customs now exist before pool building,
+   so the special-case size bookkeeping was deleted.
