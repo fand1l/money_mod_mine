@@ -11,11 +11,15 @@ A vanilla-game mod that:
 - **streamlines New Game**: only the 1936 scenario remains (1939 removed),
   and the Select Country screen shows no featured majors — just "Other
   countries";
-- **randomizes the world automatically while the scenario loads**, before
-  country selection: every existing country (vanilla + custom alike) gets a
-  random seed state and grows into adjacent land until the whole map is
-  divided with **no unowned states** and **roughly equal country sizes**
-  (islands are assigned separately to the smallest countries); a hidden
+- **randomizes the world while the scenario loads**, before country
+  selection — you pick a country on the already-randomized lobby map:
+  every existing country (vanilla + custom alike) gets a random seed state
+  and grows into adjacent land until the whole map is divided with **no
+  unowned states** and **roughly equal country sizes** (islands are
+  assigned separately to the smallest countries); **which** world appears
+  is chosen by one editable number in
+  `common/scripted_effects/rw_world_seed.txt` (setup randomness is
+  deterministic — a feature for replays and multiplayer sync); a hidden
   fallback decision covers game versions where the scenario override can't
   attach;
 - the reshuffle also gives every country a **random ideology** (25% each)

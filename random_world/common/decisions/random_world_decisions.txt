@@ -2,7 +2,8 @@
 # RANDOM WORLD - FALLBACK activation decision
 # ------------------------------------------------------------------------------
 # Normally you never see this: the world is randomized automatically by
-# on_startup right after pressing Play (fresh random seed every launch).
+# the 1936 bookmark's effect block before the lobby (or, if that layer is
+# commented out, by on_startup right after pressing Play).
 # rw_randomize_world sets the global flag when it really runs, and that
 # flag hides this decision and its whole category.
 #

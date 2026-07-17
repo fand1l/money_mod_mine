@@ -8,16 +8,16 @@
 #                   1. writes an [RW] line to game.log unconditionally - the
 #                      definitive "is the mod loaded at all?" probe;
 #                   2. enforces the faction ban (idempotent, no guard needed);
-#                   3. THE PRIMARY TRIGGER of the world reshuffle, firing at
-#                      session start - i.e. right after pressing Play. This
-#                      moment is chosen deliberately: the session random
-#                      generator is seeded fresh on every launch, so every
-#                      New Game produces a DIFFERENT world. (Running earlier,
-#                      during scenario setup, uses a fixed seed and repeats
-#                      the same world - that variant sits disabled in
-#                      common/bookmarks/.) The flag set inside
-#                      rw_randomize_world keeps it strictly one-shot per
-#                      campaign, including across save loads.
+#                   3. the SECOND trigger layer of the world reshuffle. The
+#                      primary layer runs earlier - in the 1936 bookmark's
+#                      effect block, before the lobby (world selected by
+#                      rw_world_seed.txt). If that layer is commented out
+#                      (fresh-world mode) or failed to load, THIS one fires
+#                      at session start - right after pressing Play - where
+#                      the generator is seeded fresh per launch. The flag
+#                      set inside rw_randomize_world keeps the reshuffle
+#                      strictly one-shot per campaign either way, including
+#                      across save loads.
 #
 #   on_weekly   - runs for EVERY country once each in-game week. We use it to
 #                 re-apply the "no factions" rules, so countries that are

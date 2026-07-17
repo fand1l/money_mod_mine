@@ -46,13 +46,16 @@
 # ==============================================================================
 rw_randomize_world = {
 	# The "done" flag is set HERE, not by the callers. Trigger layers, all
-	# guarded by this flag: on_startup (primary - right after pressing Play,
-	# fresh random seed every launch) -> manual decision (fallback, visible
-	# only while the flag is unset) -> plus an optional, default-disabled
-	# lobby-time layer in common/bookmarks/ (fixed seed - identical world
-	# every campaign). Whichever layer runs first wins; the rest no-op.
+	# guarded by this flag: bookmark effect (default - during scenario
+	# setup, BEFORE the lobby; which world appears is chosen by the number
+	# in rw_world_seed.txt) -> on_startup (fires instead if the bookmark
+	# layer is commented out or failed to load: fresh world per launch,
+	# applied right after pressing Play) -> manual decision (last-resort
+	# fallback). Whichever layer runs first wins; the rest no-op.
 	set_global_flag = rw_world_randomized
 	log = "[RW] world randomization: START"
+	rw_set_world_seed = yes
+	rw_burn_random_draws = yes
 	rw_disable_factions_for_all = yes
 	rw_clean_diplomacy = yes
 	rw_init_state_counters = yes
@@ -65,6 +68,31 @@ rw_randomize_world = {
 	rw_finalize_countries = yes
 	rw_randomize_industry = yes
 	log = "[RW] world randomization: DONE - [?global.rw_pool_size] countries, [?global.rw_total_states] states, target size [?global.rw_target_size]"
+}
+
+
+# ==============================================================================
+# 0.5 THE SEED BURNER
+# ------------------------------------------------------------------------------
+# During scenario setup the engine's random generator always starts from the
+# same fixed state, so every random pick would repeat identically each
+# campaign. The fix: before any real picks, throw away ("burn") N random
+# draws - N being the number from rw_world_seed.txt. Every burned draw
+# shifts the entire sequence that follows, so each N produces a completely
+# different (but reproducible) world. When the reshuffle runs in-session
+# instead (on_startup / decision), the generator is already fresh per launch
+# and the burn is just a harmless extra shuffle.
+# ==============================================================================
+rw_burn_random_draws = {
+	set_variable = { global.rw_burn_i = 0 }
+	while_loop_effect = {
+		limit = { check_variable = { global.rw_burn_i < global.rw_world_seed } }
+		add_to_variable = { global.rw_burn_i = 1 }
+		random_list = {
+			1 = { set_variable = { global.rw_burn_junk = 1 } }
+			1 = { set_variable = { global.rw_burn_junk = 2 } }
+		}
+	}
 }
 
 

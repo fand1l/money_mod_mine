@@ -333,3 +333,27 @@ IDENTICAL randomized world.
    level.
 4. GUIDE: intro, Part 6 flow, Part 7, FAQ and troubleshooting updated with
    the trade-off; new troubleshooting row for "same world every campaign".
+
+---
+
+## 13. Follow-up changes (v1.7)
+
+Priority clarified: players (multiplayer included) must pick their country
+on an already-randomized lobby map, without restarting.
+
+1. **Lobby-time generation is the default again** (bookmark `effect`
+   re-enabled), and the determinism problem is solved with a **world seed**:
+   `common/scripted_effects/rw_world_seed.txt` holds one number; before any
+   real picks the script "burns" that many throwaway random draws
+   (`rw_burn_random_draws`), shifting the engine's fixed setup sequence.
+   Each number therefore yields its own complete, reproducible world.
+2. **Trade-offs turned into features:** same number = same world (replays;
+   multiplayer clients compute identical maps — deterministic setup is
+   exactly what MP sync wants); new world = edit one number between
+   campaigns. Script has no entropy source before the lobby, so automatic
+   per-campaign variety in lobby mode is impossible at engine level.
+3. **Fresh-world mode preserved:** commenting the marked bookmark block
+   moves the trigger to `on_startup` (fires after Play, fresh seed per
+   launch, seed number becomes irrelevant). Decision fallback unchanged.
+4. GUIDE/README wording updated throughout; seed file added to the file
+   table.

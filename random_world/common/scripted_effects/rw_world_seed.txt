@@ -1,0 +1,24 @@
+# ==============================================================================
+# RANDOM WORLD - THE WORLD SEED (the one number you edit to get a new world)
+# ------------------------------------------------------------------------------
+# The world is generated BEFORE the country-selection lobby, and at that
+# moment the game's random generator is intentionally deterministic (a fixed
+# engine seed - the same trick vanilla uses for its weather seed 22345).
+# Consequence: the number below fully decides WHICH world you get.
+#
+#     >>>  CHANGE THE NUMBER (any whole number from 0 to 10000)  <<<
+#     >>>  AND THE NEXT NEW GAME GENERATES A DIFFERENT WORLD     <<<
+#
+# Same number = exactly the same world, every time. That gives you:
+#   - reproducible worlds: write a number down to replay that world later;
+#   - multiplayer safety: every player's game computes the identical world,
+#     nothing to coordinate beyond running the same mod version.
+#
+# (If instead you enable the alternative fresh-world-after-Play mode - see
+# common/bookmarks/the_gathering_storm.txt - the generator is already fresh
+# per launch and this number stops mattering.)
+# ==============================================================================
+
+rw_set_world_seed = {
+	set_variable = { global.rw_world_seed = 42 }
+}

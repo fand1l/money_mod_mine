@@ -15,17 +15,19 @@ files, and (once) pasting a small text block and checking three numbers.
   removed), and the Select Country screen shows **no featured majors** —
   just the "Other countries" card that takes you to picking a country on
   the map.
-- **The world is reshuffled automatically the moment you press Play** — and
-  every New Game produces a **brand-new world**: every existing country —
-  the three custom ones included — gets one completely **random seed
-  state** and grows outward into neighboring land until the entire world is
-  divided, with everyone roughly the same size and no state left unowned.
-  (Why not earlier, in the lobby? The engine uses a FIXED random seed
-  during scenario setup, so a lobby-time reshuffle repeats the identical
-  world every campaign — that variant exists as a disabled option. A
-  fallback "Randomize the World!" decision also exists in case the
-  automatic trigger fails on your game version — normally you never see
-  it.)
+- **The world is reshuffled before you pick a country**: while the 1936
+  scenario loads, every existing country — the three custom ones included —
+  gets one completely **random seed state** and grows outward into
+  neighboring land until the entire world is divided, with everyone roughly
+  the same size and no state left unowned. You (and, in multiplayer, your
+  friends) choose countries on the **already-randomized lobby map**.
+- **Which world appears is selected by one number** in
+  `common/scripted_effects/rw_world_seed.txt` — the engine's setup
+  randomness is deterministic, so the number IS the world: change it before
+  a new campaign for a new world, keep it to replay the same one (and in
+  multiplayer everyone computes the identical map automatically). A
+  fallback "Randomize the World!" decision exists in case the automatic
+  trigger fails on your game version — normally you never see it.
 - Every country gets a **random ideology** (fascist / communist / democratic /
   non-aligned) — names like "Nesterivtsi Reich" or "Communist Nesterivtsi"
   appear automatically.
@@ -213,13 +215,11 @@ If a number differs, change it in **two places** (both are commented):
 2. **New Game.** First proof the mod is loaded: there is **only one
    scenario — 1936** (no 1939 card), and the Select Country screen shows
    **no major portraits**, only **"Other countries"**.
-3. Continue to the map lobby. It still shows the **pre-reshuffle** world
-   (vanilla borders + the three custom countries on their homes) — pick any
-   country and press **Play**. The first seconds after Play the script
-   divides the whole planet: when the clock is ready to tick, the map is a
-   randomized patchwork, different in **every** campaign. Note that the
-   country you picked now owns random lands somewhere — picking a country
-   is picking a name/tag, not a location.
+3. Continue to the map lobby. Loading takes a few extra seconds — that is
+   the script dividing the whole planet. The lobby map should already be a
+   **randomized patchwork**: pick literally any country whose position you
+   like (Nesterivtsi, Kamianets and Kharkiv are out there too, with random
+   lands) and press **START**.
 4. Sanity checks in-game: no grey/unowned land anywhere; every country has
    a random ideology; the diplomacy screen offers no faction actions; open
    any state — building **slots** and **population** are vanilla, only the
@@ -228,13 +228,15 @@ If a number differs, change it in **two places** (both are commented):
    last-resort fallback that only appears if BOTH automatic triggers failed
    (see Troubleshooting). If you see it, press it — the reshuffle runs
    manually — and then do the log check below to find what broke.
-6. **Want to see the world before picking instead?** There is a disabled
-   option for that in `common/bookmarks/the_gathering_storm.txt` (uncomment
-   five lines) — but be aware of the engine trade-off it reintroduces: the
-   scenario-setup random seed is fixed, so the lobby-time reshuffle
-   produces the **identical world every campaign**. Fresh-world-per-game
-   and world-visible-in-lobby cannot both be had; the mod defaults to
-   fresh worlds.
+6. **Want a different world for the next campaign?** Open
+   `random_world\common\scripted_effects\rw_world_seed.txt` and change the
+   number — every number is its own reproducible world. This is an engine
+   necessity, not a quirk: during scenario setup the random generator is
+   deterministic, so lobby-time generation repeats one sequence — the
+   number shifts it. (Prefer automatic variety and don't care about the
+   lobby preview? Comment out the marked five-line block in
+   `common\bookmarks\the_gathering_storm.txt` — the reshuffle then moves to
+   right-after-Play by itself and differs every launch.)
 
 **Where the logs are** (your best friends when something is off):
 `Documents\Paradox Interactive\Hearts of Iron IV\logs\` —
@@ -248,14 +250,16 @@ If a number differs, change it in **two places** (both are commented):
 Everything lives in `random_world_scripted_effects.txt` (heavily commented);
 this is the same story without code. The **faction ban** (step 1) runs by
 itself every time a session starts. Steps 2–11 run once per campaign from
-`on_startup`, i.e. right after you press Play — deliberately inside the
-session, where the random generator is seeded fresh on every launch (a
-lobby-time variant exists disabled in `common/bookmarks/`, but the fixed
-setup seed there repeats one identical world; the Decisions-panel button
-remains as a dormant fallback trigger). Separately, the three custom
-countries receive their home states during map setup (three lines in their
-`history/countries` files) — that is why their borders exist on the
-pre-randomization lobby map.
+the 1936 scenario's `effect` block during setup — before the lobby. Setup
+randomness is deterministic, so the script first "burns" as many throwaway
+random draws as the number in `rw_world_seed.txt` says — shifting the whole
+sequence and thereby selecting which world gets built. (If that trigger is
+commented out, `on_startup` fires the reshuffle right after Play instead —
+fresh world per launch — and the Decisions-panel button remains as a
+dormant last resort.) Separately, the three custom countries receive their
+home states during map setup via their `history/countries` files — that
+brief ownership is what brings them into existence so the reshuffle can
+include them in the pool.
 
 1. **Ban factions.** Whoever leads a faction dismantles it; then every
    country gets two permanent "country rules" that grey out *Create Faction*
@@ -328,6 +332,7 @@ starting borders.
 | `common/decisions/random_world_decisions.txt` | Fallback one-shot "Randomize the World!" button — appears only if the scenario override failed to load. |
 | `common/on_actions/ZZ_random_world_on_actions.txt` | "At every session start ban factions; every week re-ban them." |
 | `common/scripted_effects/random_world_scripted_effects.txt` | The entire algorithm (sections 0–12, commented). |
+| `common/scripted_effects/rw_world_seed.txt` | The one number that selects **which** world is generated — edit for a new world, keep to replay one. |
 | `history/countries/TAG - Name.txt` | Custom country's 1936 setup: capital, **its starting borders** (`transfer_state` + `add_state_core`), techs, politics, equipment. |
 | `history/units/TAG_1936.txt` | Its division blueprint (so it can train troops immediately). |
 | `localisation/english/random_world_l_english.yml` | The names: 4 ideology names per custom country. **Must stay UTF-8 with BOM** (it already is; editors keep it if you just edit and save). |
@@ -342,8 +347,8 @@ starting borders.
 | **Mod seems to have no effect in-game** (no custom countries on the map, no "Random World" decision) | The mod is not actually loading. Check, in order: (1) it is **ticked in the active playset** (top of the launcher — the playset selected there is what launches); (2) the folder is exactly `mod\random_world` with `descriptor.mod` **directly** inside it — a very common mistake is a nested `mod\random_world\random_world\…`; (3) you started a **new** game, not an old save from before the mod; (4) `error.log` after launch — a syntax typo can make the game silently drop a file. |
 | Decision pressed but nothing changed | Impossible in a loaded mod — but check `game.log` for the `[RW]` lines; if they stop at some phase, `error.log` names the guilty line (see the substitution table below). |
 | **Still two scenarios** on New Game, or the majors' portraits are still there | Your game version names its bookmark files differently, so the override didn't attach. Open the **game's** `common\bookmarks\` folder and rename the mod's two files to match the vanilla names exactly. |
-| The lobby map is not randomized, only the world after pressing Play | **That is the intended default** — see Part 6, item 6. |
-| **The same randomized world appears in every campaign** | You enabled the optional lobby-time trigger in `common/bookmarks/the_gathering_storm.txt`. That path runs on the engine's fixed setup seed and always repeats one world — re-comment those five lines to return to the default (fresh world per game, applied right after Play). |
+| The lobby map is not randomized, only the world after pressing Play | The bookmark trigger block is commented out (that's the optional fresh-world mode), or the bookmark override didn't attach — see the filename row above. |
+| **The same randomized world appears in every campaign** | Expected in lobby mode — setup randomness is deterministic by engine design. Change the number in `common/scripted_effects/rw_world_seed.txt`; every number is a different world. |
 | The "Random World" decision category IS visible in-game | Both automatic triggers failed to execute — almost always "the mod's script files aren't loading at all". Press the decision if it works, then run the log check below. |
 | **World not randomized at all** — not in the lobby and not after pressing Play | Run **the 60-second log check** below; it pinpoints the broken link. |
 
@@ -395,12 +400,12 @@ the line `error.log` complains about and try the replacement:
 ## Part 10 — FAQ and honest limitations
 
 - **Achievements** are disabled with any mod. Nothing to do about it.
-- **You pick your country on the pre-reshuffle map; the world transforms
-  right after Play.** The classic bookmark screen with major portraits is
-  gone (only "Other countries" remains), and the 1939 scenario is removed.
-  This ordering is an engine trade-off, not a bug: reshuffling before the
-  lobby is only possible with the engine's fixed setup seed, which would
-  make every campaign identical — the mod prefers a fresh world per game.
+- **You pick your country on the already-randomized lobby map.** The
+  classic bookmark screen with major portraits is gone (only "Other
+  countries" remains), and the 1939 scenario is removed. One world per
+  seed number — swap the number in `rw_world_seed.txt` between campaigns
+  for variety; identical numbers give identical worlds (a feature: replays
+  and multiplayer sync for free).
 - **Armies at randomization** may teleport: units standing on land that
   changed hands get auto-relocated by the engine. Harmless, settles
   immediately.
