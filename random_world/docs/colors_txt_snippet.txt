@@ -1,0 +1,32 @@
+# ==============================================================================
+# MAP COLORS FOR THE CUSTOM COUNTRIES - ONE REQUIRED MANUAL STEP
+# ------------------------------------------------------------------------------
+# The file  common/countries/colors.txt  is special: a mod's version REPLACES
+# the vanilla file completely instead of being merged with it. If we shipped a
+# colors.txt containing only our 3 countries, every vanilla country would lose
+# its map color. That is why this mod does NOT ship a colors.txt.
+#
+# DO THIS ONCE (details in GUIDE.md, step 3):
+#   1. Open the GAME's install folder, e.g.
+#      C:\Program Files (x86)\Steam\steamapps\common\Hearts of Iron IV
+#   2. Copy the file   common\countries\colors.txt
+#      into THE MOD at  <mod folder>\common\countries\colors.txt
+#      (next to Nesterivtsi.txt).
+#   3. Open the copied file in your text editor, scroll to the very bottom,
+#      and paste the block below. Save. Done.
+# ==============================================================================
+
+NES = {
+	color = rgb { 45 110 210 }
+	color_ui = rgb { 65 130 230 }
+}
+
+KAM = {
+	color = rgb { 150 30 45 }
+	color_ui = rgb { 170 50 65 }
+}
+
+KHA = {
+	color = rgb { 35 125 60 }
+	color_ui = rgb { 55 145 80 }
+}

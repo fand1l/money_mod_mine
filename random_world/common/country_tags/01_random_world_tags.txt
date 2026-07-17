@@ -1,0 +1,16 @@
+# ==============================================================================
+# RANDOM WORLD - custom country tags
+# ------------------------------------------------------------------------------
+# Every country in HOI4 is identified by a 3-letter TAG. This file tells the
+# game that three new tags exist and where their definition files live
+# (paths are relative to the "common" folder).
+#
+# IMPORTANT: a tag must not already exist in vanilla. Before changing these,
+# open the game's own file  common/country_tags/00_countries.txt  and Ctrl+F
+# your new tag to make sure it is not taken. NES / KAM / KHA are free in
+# vanilla at the time of writing.
+# ==============================================================================
+
+NES = "countries/Nesterivtsi.txt"
+KAM = "countries/Kamianets.txt"
+KHA = "countries/Kharkiv.txt"

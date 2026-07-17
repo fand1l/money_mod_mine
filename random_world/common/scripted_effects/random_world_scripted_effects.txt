@@ -1,0 +1,610 @@
+# ==============================================================================
+# RANDOM WORLD - scripted effects (the whole brain of the mod lives here)
+# ------------------------------------------------------------------------------
+# HOW TO READ THIS FILE IF YOU HAVE NEVER SEEN CODE
+#
+#   * Lines that start with # are comments. The game ignores them completely.
+#   * A "scripted effect" is a named block of instructions. Writing
+#     "rw_something = yes" somewhere else runs that block.
+#   * "Scope" means "who is doing this right now". Inside every_country = {...}
+#     the instructions run once per country, and that country is the scope.
+#     Inside every_state = {...} the scope is each state (province group).
+#   * THIS = the current scope. PREV = the scope one level up. Example:
+#     inside  every_country -> random_state  , THIS is the state and PREV is
+#     the country.
+#   * Variables are numbers the script remembers. "global.x" is one shared
+#     world-wide number; plain "x" is stored on the current country or state.
+#   * Arrays are lists. We keep one global list: every country that takes part
+#     in the land distribution ("the pool").
+#
+# THE ALGORITHM IN ONE PARAGRAPH
+#   Dismantle factions and forbid them forever. End the 1936 wars and free all
+#   puppets so land can move cleanly. Seed the 3 custom countries on their
+#   historic Ukrainian home states. Put every existing country into "the pool"
+#   and give every remaining pool country one random free state as a seed.
+#   Then run rounds: each round, every country that is still below the target
+#   size (total states / number of countries) grabs ONE free state that
+#   touches its territory. When nobody below the cap can grow any more, run
+#   the same loop without the cap to fill leftover pockets. Whatever is still
+#   free after that is unreachable by land (islands): hand one island state to
+#   the smallest country, let growth mop up that island's neighbors, repeat
+#   until literally every state on the map is owned. Finally: fix capitals,
+#   hand out cores, roll a random ideology for everyone, and re-roll built
+#   factories in every state. Building slots and population are never touched.
+#
+# DEBUGGING
+#   Every phase writes a "[RW] ..." line into Documents/Paradox Interactive/
+#   Hearts of Iron IV/logs/game.log. If something misbehaves, read game.log
+#   and error.log first - see the Troubleshooting chapter of GUIDE.md.
+# ==============================================================================
+
+
+# ==============================================================================
+# 0. MASTER SWITCH - called once from on_startup
+# ==============================================================================
+rw_randomize_world = {
+	log = "[RW] world randomization: START"
+	rw_disable_factions_for_all = yes
+	rw_clean_diplomacy = yes
+	rw_init_state_counters = yes
+	rw_seed_custom_countries = yes
+	rw_build_pool = yes
+	rw_seed_all_countries = yes
+	rw_capped_growth = yes
+	rw_overflow_growth = yes
+	rw_assign_islands = yes
+	rw_finalize_countries = yes
+	rw_randomize_industry = yes
+	log = "[RW] world randomization: DONE - [?global.rw_pool_size] countries, [?global.rw_total_states] states, target size [?global.rw_target_size]"
+}
+
+
+# ==============================================================================
+# 1. NO FACTIONS
+# ------------------------------------------------------------------------------
+# Two steps:
+#   a) every country that currently LEADS a faction dismantles it
+#      (in 1936 that removes the Comintern);
+#   b) every country gets two permanent country rules that grey out the
+#      "Create Faction" and "Join Faction" diplomacy actions for humans AND
+#      make them impossible for the AI.
+# on_weekly (see the on_actions file) re-applies step b) forever, so countries
+# born later are covered too.
+# ==============================================================================
+rw_disable_factions_for_all = {
+	every_country = {
+		limit = { is_faction_leader = yes }
+		dismantle_faction = yes
+	}
+	every_country = {
+		set_rule = {
+			can_create_factions = no
+			can_join_factions = no
+		}
+	}
+	log = "[RW] factions dismantled and forbidden"
+}
+
+
+# ==============================================================================
+# 2. CLEAN DIPLOMACY
+# ------------------------------------------------------------------------------
+# The 1936 start has puppets (e.g. Manchukuo) and one shooting war
+# (Italy vs Ethiopia). Randomly scattering territory while those exist creates
+# nonsense, so: every subject becomes free, every ongoing war ends in a white
+# peace. After randomization everyone starts equal and at peace.
+# ==============================================================================
+rw_clean_diplomacy = {
+	every_country = {
+		limit = { is_subject = yes }
+		OVERLORD = {
+			set_autonomy = {
+				target = PREV
+				autonomy_state = autonomy_free
+			}
+		}
+	}
+	every_country = {
+		limit = { has_war = yes }
+		every_country = {
+			limit = { has_war_with = PREV }
+			white_peace = PREV
+		}
+	}
+	log = "[RW] subjects freed, wars white-peaced"
+}
+
+
+# ==============================================================================
+# 3. COUNT THE MAP
+# ------------------------------------------------------------------------------
+# global.rw_total_states = how many land states exist on the whole map.
+# global.rw_free_states  = how many are not yet claimed by the algorithm.
+# Every claim (rw_claim_this_state) lowers rw_free_states by 1, so "the world
+# is fully divided" simply means rw_free_states = 0.
+# ==============================================================================
+rw_init_state_counters = {
+	set_variable = { global.rw_total_states = 0 }
+	set_variable = { global.rw_free_states = 0 }
+	every_state = {
+		add_to_variable = { global.rw_total_states = 1 }
+		add_to_variable = { global.rw_free_states = 1 }
+	}
+	log = "[RW] states on map: [?global.rw_total_states]"
+}
+
+
+# ==============================================================================
+# 4. THE CLAIM HELPER (used by every phase below)
+# ------------------------------------------------------------------------------
+# Runs in STATE scope; PREV must be the country that takes the state.
+# It does four things:
+#   - writes the taker's id on the state (rw_claimed_by) - this is how the
+#     growth loops know which territory belongs to whom;
+#   - actually transfers ownership of the state to the taker;
+#   - grows the taker's personal size counter (rw_size) - and if this was its
+#     FIRST state, remembers it as the future capital (rw_capital_state);
+#   - updates the global "still free" counter and the per-round progress
+#     counter (the loops stop when a whole round makes no progress).
+# ==============================================================================
+rw_claim_this_state = {
+	set_variable = { rw_claimed_by = PREV.id }
+	PREV = {
+		transfer_state = PREV
+		add_to_variable = { rw_size = 1 }
+		if = {
+			limit = { check_variable = { rw_size = 1 } }
+			set_variable = { rw_capital_state = PREV.id }
+		}
+	}
+	subtract_from_variable = { global.rw_free_states = 1 }
+	add_to_variable = { global.rw_round_progress = 1 }
+}
+
+
+# ==============================================================================
+# 5. SEED THE CUSTOM COUNTRIES AT THEIR HISTORIC HOMES
+# ------------------------------------------------------------------------------
+# The three custom countries do NOT get a random start - they seed on their
+# real-world locations (per design), and only their further growth is random.
+#
+#           >>>>>  THE ONLY NUMBERS YOU MAY NEED TO EDIT  <<<<<
+#
+# A "state id" is just a number the game gives every state. The defaults
+# below are the vanilla states covering these regions:
+#   196 = "Vinnytsia / Podillia" area  -> home of Nesterivtsi AND Kamianets
+#         (both real places sit in today's Khmelnytskyi oblast, which vanilla
+#         folds into this one state)
+#   198 = "Kharkov" area              -> home of Kharkiv
+#
+# HOW TO VERIFY ON YOUR GAME VERSION (2 minutes, see GUIDE.md step 4):
+#   in-game console (~ key) -> type  tdebug  -> hover the region on the map ->
+#   the tooltip shows "State ID". Or search the game's history/states folder
+#   for "Vinnitsa"/"Kharkov" - the number at the top of the file is the id.
+#
+# Nesterivtsi and Kamianets share one vanilla state, and that is fine:
+# whoever seeds second finds its home taken and automatically takes a free
+# NEIGHBORING state instead (see rw_seed_at_home_state below). If your game
+# version has a separate "Kamenets-Podolsk" state, put its id on the KAM line.
+# ==============================================================================
+rw_seed_custom_countries = {
+	NES = { set_variable = { rw_home_state = 196 } }	# Podillia
+	KAM = { set_variable = { rw_home_state = 196 } }	# southern Khmelnytskyi region
+	KHA = { set_variable = { rw_home_state = 198 } }	# Kharkiv region
+
+	NES = { rw_seed_at_home_state = yes }
+	KAM = { rw_seed_at_home_state = yes }
+	KHA = { rw_seed_at_home_state = yes }
+	log = "[RW] custom countries seeded at their homes"
+}
+
+# Runs in COUNTRY scope. Tries, in order:
+#   1) my home state itself, if still free;
+#   2) any free state that touches my home state (used when two custom
+#      countries share a home);
+#   3) any free state at all (emergency fallback - can only happen if the
+#      home id is wrong AND the map is nearly full, i.e. practically never).
+rw_seed_at_home_state = {
+	# Stamp my country id onto my home state so the neighbor-search in step 2
+	# can recognize "a state next to MY home".
+	var:rw_home_state = {
+		set_variable = { rw_home_of = PREV.id }
+	}
+	if = {
+		limit = {
+			var:rw_home_state = { NOT = { has_variable = rw_claimed_by } }
+		}
+		var:rw_home_state = { rw_claim_this_state = yes }
+	}
+	else = {
+		random_state = {
+			limit = {
+				NOT = { has_variable = rw_claimed_by }
+				any_neighbor_state = {
+					check_variable = { rw_home_of = PREV.PREV.id }
+				}
+			}
+			rw_claim_this_state = yes
+		}
+	}
+	# Emergency fallback: still no state? Take anything free.
+	if = {
+		limit = { check_variable = { rw_size < 1 } }
+		random_state = {
+			limit = { NOT = { has_variable = rw_claimed_by } }
+			rw_claim_this_state = yes
+		}
+	}
+}
+
+
+# ==============================================================================
+# 6. BUILD THE POOL
+# ------------------------------------------------------------------------------
+# The pool = every country that exists right now. The custom countries were
+# seeded in phase 5, so they own a state and therefore exist -> they are
+# automatically included. Countries that do NOT exist in 1936 (releasable
+# nations like vanilla Ukraine) are not in the pool - exactly as intended.
+#
+# THE "PROTECTED STATE" TRICK (important, subtle):
+# In the next phase every pool country receives a random seed state anywhere
+# on the map. Imagine Luxembourg (1 state): if Germany's random seed happens
+# to land on Luxembourg's ONLY state before Luxembourg got its own seed,
+# Luxembourg would own nothing, stop existing, and silently drop out of the
+# world. To make that impossible, every pool country marks ONE of its current
+# states as "protected"; random seeds are simply not allowed to land on
+# protected states. Once everyone has a seed, protection stops mattering
+# (the growth loops are allowed to take protected states, and by then every
+# country already owns its seed, so nobody can die).
+#
+# rw_target_size = total states / number of countries = how big everyone
+# should roughly become. The capped growth loop stops countries there.
+# ==============================================================================
+rw_build_pool = {
+	set_variable = { global.rw_pool_size = 0 }
+	every_country = {
+		limit = { exists = yes }
+		set_country_flag = rw_pool_member
+		set_variable = { rw_size = 0 }
+		add_to_array = { array = global.rw_pool value = THIS.id }
+		add_to_variable = { global.rw_pool_size = 1 }
+		random_owned_state = {
+			set_variable = { rw_protected = 1 }
+		}
+	}
+	# Custom countries already claimed their seed before this ran, so their
+	# rw_size was reset to 0 by the line above - restore it (they own exactly
+	# their 1 seed state at this point).
+	NES = { set_variable = { rw_size = 1 } }
+	KAM = { set_variable = { rw_size = 1 } }
+	KHA = { set_variable = { rw_size = 1 } }
+
+	set_variable = { global.rw_target_size = global.rw_total_states }
+	divide_variable = { global.rw_target_size = global.rw_pool_size }
+	log = "[RW] pool: [?global.rw_pool_size] countries, target size [?global.rw_target_size]"
+}
+
+
+# ==============================================================================
+# 7. RANDOM SEEDS FOR EVERYONE ELSE
+# ------------------------------------------------------------------------------
+# Every pool country that does not have a seed yet (rw_size still 0 - i.e.
+# everyone except NES/KAM/KHA) gets ONE completely random free state:
+# not already claimed, not protected (see phase 6), not an impassable
+# wasteland (nobody wants a capital in the middle of the Sahara).
+# ==============================================================================
+rw_seed_all_countries = {
+	for_each_scope_loop = {
+		array = global.rw_pool
+		if = {
+			limit = { check_variable = { rw_size < 1 } }
+			random_state = {
+				limit = {
+					NOT = { has_variable = rw_claimed_by }
+					NOT = { has_variable = rw_protected }
+					NOT = { impassable = yes }
+				}
+				rw_claim_this_state = yes
+			}
+		}
+	}
+	log = "[RW] all countries seeded, free states left: [?global.rw_free_states]"
+}
+
+
+# ==============================================================================
+# 8. CAPPED ROUND-ROBIN GROWTH  (the core of the whole mod)
+# ------------------------------------------------------------------------------
+# Picture all countries sitting around a table, taking turns:
+#
+#   ROUND:
+#     for every country in the pool, one after another:
+#       - if the country already reached the target size -> skip it
+#       - otherwise it picks ONE random free state that TOUCHES a state it
+#         already claimed ("touches" = any_neighbor_state), and claims it
+#   repeat ROUND until a full round passes in which NOBODY claimed anything
+#   (everyone is either at the cap or walled in), or the map runs out of
+#   free states.
+#
+# Because every country adds at most 1 state per round, sizes stay within
+# 1 state of each other for as long as geometry allows -> "roughly equal".
+#
+# HOW THE ADJACENCY CHECK WORKS, WORD BY WORD:
+#   random_state = {                      <- look at random states...
+#     limit = {                           <- ...but only ones where:
+#       NOT = { has_variable = rw_claimed_by }     it is still free, AND
+#       any_neighbor_state = {                     at least one neighbor...
+#         check_variable = { rw_claimed_by = PREV.PREV.id }
+#                                          ...was claimed BY ME (PREV.PREV =
+#                                          the country two scope levels up:
+#                                          neighbor -> candidate -> country)
+#     } }
+#     rw_claim_this_state = yes           <- claim it (PREV = the country)
+#   }
+#
+# The while-loop is guarded three ways: free states remain, last round made
+# progress, and a hard safety counter (< 200 rounds) so the game can never
+# hang even if something unexpected happens.
+# ==============================================================================
+rw_capped_growth = {
+	set_variable = { global.rw_round_progress = 1 }
+	set_variable = { global.rw_safety = 0 }
+	while_loop_effect = {
+		limit = {
+			check_variable = { global.rw_free_states > 0 }
+			check_variable = { global.rw_round_progress > 0 }
+			check_variable = { global.rw_safety < 200 }
+		}
+		set_variable = { global.rw_round_progress = 0 }
+		add_to_variable = { global.rw_safety = 1 }
+		for_each_scope_loop = {
+			array = global.rw_pool
+			if = {
+				limit = { check_variable = { rw_size < global.rw_target_size } }
+				random_state = {
+					limit = {
+						NOT = { has_variable = rw_claimed_by }
+						any_neighbor_state = {
+							check_variable = { rw_claimed_by = PREV.PREV.id }
+						}
+					}
+					rw_claim_this_state = yes
+				}
+			}
+		}
+	}
+	log = "[RW] capped growth done, free states left: [?global.rw_free_states]"
+}
+
+
+# ==============================================================================
+# 9. OVERFLOW GROWTH (no size cap)
+# ------------------------------------------------------------------------------
+# After phase 8 some free states can remain: pockets that are only reachable
+# by countries that already hit the cap. Leaving them empty is forbidden
+# ("no unowned states"), so we run the exact same loop WITHOUT the size cap.
+# Sizes drift slightly above the target here - that is the price of 100%
+# coverage and is what "roughly the same size" means in practice.
+# ==============================================================================
+rw_overflow_growth = {
+	set_variable = { global.rw_round_progress = 1 }
+	set_variable = { global.rw_safety = 0 }
+	while_loop_effect = {
+		limit = {
+			check_variable = { global.rw_free_states > 0 }
+			check_variable = { global.rw_round_progress > 0 }
+			check_variable = { global.rw_safety < 500 }
+		}
+		set_variable = { global.rw_round_progress = 0 }
+		add_to_variable = { global.rw_safety = 1 }
+		for_each_scope_loop = {
+			array = global.rw_pool
+			random_state = {
+				limit = {
+					NOT = { has_variable = rw_claimed_by }
+					any_neighbor_state = {
+						check_variable = { rw_claimed_by = PREV.PREV.id }
+					}
+				}
+				rw_claim_this_state = yes
+			}
+		}
+	}
+	log = "[RW] overflow growth done, free states left: [?global.rw_free_states]"
+}
+
+
+# ==============================================================================
+# 10. ISLANDS AND OTHER UNREACHABLE LAND
+# ------------------------------------------------------------------------------
+# Everything still free now has NO claimed land neighbor at all - islands and
+# island chains. Per design, islands are exempt from the land-connection rule.
+# Loop:
+#   1) find the country with the SMALLEST territory (helps balance);
+#   2) give it one random free state (a beachhead on some island);
+#   3) rerun overflow growth - the beachhead's island neighbors are now
+#      reachable and get mopped up;
+#   4) repeat while anything is still free (safety-capped).
+# When this ends, rw_free_states is 0: the whole world is owned.
+# ==============================================================================
+rw_assign_islands = {
+	set_variable = { global.rw_island_safety = 0 }
+	while_loop_effect = {
+		limit = {
+			check_variable = { global.rw_free_states > 0 }
+			check_variable = { global.rw_island_safety < 300 }
+		}
+		add_to_variable = { global.rw_island_safety = 1 }
+
+		# --- find the smallest pool country ---
+		set_variable = { global.rw_min_size = 100000 }
+		for_each_scope_loop = {
+			array = global.rw_pool
+			if = {
+				limit = { check_variable = { rw_size < global.rw_min_size } }
+				set_variable = { global.rw_min_size = rw_size }
+				save_global_event_target_as = rw_smallest_country
+			}
+		}
+
+		# --- beachhead + mop-up ---
+		event_target:rw_smallest_country = {
+			random_state = {
+				limit = { NOT = { has_variable = rw_claimed_by } }
+				rw_claim_this_state = yes
+			}
+		}
+		rw_overflow_growth = yes
+	}
+	log = "[RW] islands assigned, free states left: [?global.rw_free_states]"
+}
+
+
+# ==============================================================================
+# 11. FINALIZE COUNTRIES: capital, cores, random ideology
+# ------------------------------------------------------------------------------
+# For every pool country:
+#   - capital moves to its seed state (the first state it claimed);
+#   - it gets CORES on everything it owns (cores = "this land is rightfully
+#     ours": full manpower and factory output, no resistance) and loses its
+#     old vanilla cores on land it does NOT own - a completely clean slate;
+#   - one of the four vanilla ideologies is rolled with equal 25% odds.
+# NOTE: cores change NOTHING about population size or building slots - they
+# only change how much of the (unchanged) population/industry you can use.
+# ==============================================================================
+rw_finalize_countries = {
+	for_each_scope_loop = {
+		array = global.rw_pool
+
+		if = {
+			limit = { has_variable = rw_capital_state }
+			set_capital = { state = var:rw_capital_state }
+		}
+
+		every_owned_state = { add_core_of = PREV }
+		every_state = {
+			limit = {
+				is_core_of = PREV
+				NOT = { is_owned_by = PREV }
+			}
+			remove_core_of = PREV
+		}
+
+		random_list = {
+			25 = { rw_make_fascist = yes }
+			25 = { rw_make_communist = yes }
+			25 = { rw_make_democratic = yes }
+			25 = { rw_make_neutral = yes }
+		}
+	}
+	log = "[RW] capitals, cores and ideologies set"
+}
+
+# The four ideology setters. set_politics changes the ruling party;
+# set_popularities rewrites party support (the four numbers MUST sum to 100).
+rw_make_fascist = {
+	set_politics = {
+		ruling_party = fascism
+		last_election = "1932.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		fascism = 60
+		democratic = 13
+		communism = 13
+		neutrality = 14
+	}
+}
+rw_make_communist = {
+	set_politics = {
+		ruling_party = communism
+		last_election = "1932.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		communism = 60
+		fascism = 13
+		democratic = 13
+		neutrality = 14
+	}
+}
+rw_make_democratic = {
+	set_politics = {
+		ruling_party = democratic
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = yes
+	}
+	set_popularities = {
+		democratic = 60
+		fascism = 13
+		communism = 13
+		neutrality = 14
+	}
+}
+rw_make_neutral = {
+	set_politics = {
+		ruling_party = neutrality
+		last_election = "1932.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		neutrality = 60
+		fascism = 13
+		communism = 13
+		democratic = 14
+	}
+}
+
+
+# ==============================================================================
+# 12. RANDOMIZE BUILT INDUSTRY
+# ------------------------------------------------------------------------------
+# For every state we OVERWRITE the number of already-built factories with a
+# random roll (set_building_level sets the exact count, replacing vanilla):
+#   - civilian factories  (industrial_complex): 0-8, most often 1-3
+#   - military factories  (arms_factory):       0-6, most often 0-2
+#   - naval dockyards     (dockyard):           0-5, COASTAL STATES ONLY
+#
+# In a random_list the numbers on the left are relative chances (they sum to
+# 100 here, so you can read them as percentages).
+#
+# STRICTLY NOT TOUCHED (by design): state category / building slot limits and
+# state population. If a roll exceeds a state's slot limit the game clamps it,
+# so small states simply cap out - the limit itself is never modified.
+# ==============================================================================
+rw_randomize_industry = {
+	every_state = {
+		random_list = {
+			15 = { set_building_level = { type = industrial_complex level = 0 instant_build = yes } }
+			25 = { set_building_level = { type = industrial_complex level = 1 instant_build = yes } }
+			20 = { set_building_level = { type = industrial_complex level = 2 instant_build = yes } }
+			15 = { set_building_level = { type = industrial_complex level = 3 instant_build = yes } }
+			10 = { set_building_level = { type = industrial_complex level = 4 instant_build = yes } }
+			10 = { set_building_level = { type = industrial_complex level = 5 instant_build = yes } }
+			5  = { set_building_level = { type = industrial_complex level = 8 instant_build = yes } }
+		}
+		random_list = {
+			25 = { set_building_level = { type = arms_factory level = 0 instant_build = yes } }
+			25 = { set_building_level = { type = arms_factory level = 1 instant_build = yes } }
+			20 = { set_building_level = { type = arms_factory level = 2 instant_build = yes } }
+			15 = { set_building_level = { type = arms_factory level = 3 instant_build = yes } }
+			10 = { set_building_level = { type = arms_factory level = 4 instant_build = yes } }
+			5  = { set_building_level = { type = arms_factory level = 6 instant_build = yes } }
+		}
+		if = {
+			limit = { is_coastal = yes }
+			random_list = {
+				40 = { set_building_level = { type = dockyard level = 0 instant_build = yes } }
+				30 = { set_building_level = { type = dockyard level = 1 instant_build = yes } }
+				15 = { set_building_level = { type = dockyard level = 2 instant_build = yes } }
+				10 = { set_building_level = { type = dockyard level = 3 instant_build = yes } }
+				5  = { set_building_level = { type = dockyard level = 5 instant_build = yes } }
+			}
+		}
+	}
+	log = "[RW] industry randomized"
+}

@@ -1,0 +1,37 @@
+# Starting setup for KHA (Kharkiv). See the NES file for comments.
+# capital = 198 is the vanilla Kharkov state.
+
+capital = 198
+
+oob = "KHA_1936"
+
+set_research_slots = 3
+set_convoys = 20
+set_stability = 0.6
+set_war_support = 0.4
+
+set_technology = {
+	infantry_weapons = 1
+	gw_artillery = 1
+	basic_train = 1
+}
+
+add_equipment_to_stockpile = {
+	type = infantry_equipment_0
+	amount = 1000
+	producer = KHA
+}
+
+set_politics = {
+	ruling_party = neutrality
+	last_election = "1932.1.1"
+	election_frequency = 48
+	elections_allowed = no
+}
+
+set_popularities = {
+	neutrality = 55
+	fascism = 15
+	communism = 15
+	democratic = 15
+}

@@ -1,0 +1,18 @@
+# This is what the LAUNCHER-SIDE mod file looks like. You normally do NOT
+# create it by hand - the Paradox launcher's "Create a mod" button makes it
+# for you (see GUIDE.md, step 1). It lives one level ABOVE the mod folder:
+#
+#   Documents/Paradox Interactive/Hearts of Iron IV/mod/random_world.mod
+#
+# If you ever need to create it manually, copy this file there, rename it to
+# random_world.mod, and make sure "path" points at the mod folder.
+
+version="1.0.0"
+tags={
+	"Alternative History"
+	"Gameplay"
+	"Map"
+}
+name="Random World - No Factions"
+supported_version="1.19.*"
+path="mod/random_world"

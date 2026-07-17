@@ -1,0 +1,9 @@
+# Country definition for NES (Nesterivtsi).
+# graphical_culture decides which generic unit/leader art style is used.
+# color is the fallback map color (the real map color should also be added
+# to your copy of common/countries/colors.txt - see random_world/docs/).
+
+graphical_culture = eastern_european_gfx
+graphical_culture_2d = eastern_european_2d
+
+color = { 45 110 210 }

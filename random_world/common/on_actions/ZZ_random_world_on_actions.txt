@@ -1,0 +1,44 @@
+# ==============================================================================
+# RANDOM WORLD - on_actions
+# ------------------------------------------------------------------------------
+# "on_actions" are hooks the game itself calls at fixed moments.
+#
+#   on_startup  - runs once when a game session starts (right after you press
+#                 "Play" on the country-selection screen, before the first
+#                 in-game hour ticks). NOTE: it ALSO runs every time you load
+#                 a save, which is why everything below is wrapped in a
+#                 "has_global_flag" check - the flag is saved inside the
+#                 savegame, so the world is randomized exactly once per
+#                 campaign and never again.
+#
+#   on_weekly   - runs for EVERY country once each in-game week. We use it to
+#                 re-apply the "no factions" rules, so countries that are
+#                 created LATER (civil wars, released nations) can never
+#                 create or join factions either.
+#
+# The file name starts with ZZ_ so it loads after vanilla files (purely
+# cosmetic; on_actions from different files are merged, not replaced).
+# ==============================================================================
+
+on_actions = {
+
+	on_startup = {
+		effect = {
+			if = {
+				limit = { NOT = { has_global_flag = rw_world_randomized } }
+				set_global_flag = rw_world_randomized
+				rw_randomize_world = yes
+			}
+		}
+	}
+
+	on_weekly = {
+		effect = {
+			# Scope here is the country whose week ticked.
+			set_rule = {
+				can_create_factions = no
+				can_join_factions = no
+			}
+		}
+	}
+}

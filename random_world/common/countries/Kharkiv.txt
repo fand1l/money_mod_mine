@@ -1,0 +1,6 @@
+# Country definition for KHA (Kharkiv).
+
+graphical_culture = eastern_european_gfx
+graphical_culture_2d = eastern_european_2d
+
+color = { 35 125 60 }
