@@ -228,10 +228,16 @@ If a number differs, change it in **two places** (both are commented):
    last-resort fallback that only appears if BOTH automatic triggers failed
    (see Troubleshooting). If you see it, press it — the reshuffle runs
    manually — and then do the log check below to find what broke.
-6. **Want a different world for the next campaign?** Open
+6. **Want a different world for the next campaign?** The comfortable way:
+   double-click **`randomize_seed_and_play.bat`** in the mod folder (with
+   the game closed) — it writes a fresh random seed and starts HOI4 for
+   you, so **every launch is a new world** with zero manual editing (the
+   seed it picked is shown in the window — note it down for replays; if
+   auto-launch can't find your `hoi4.exe`, fix the `GAME_EXE` path inside
+   the script or just start the game normally). The manual way: open
    `random_world\common\scripted_effects\rw_world_seed.txt`, change the
-   number, and **restart HOI4** — the game parses mod files only once, at
-   application launch, so an edit made while it runs is invisible
+   number (0–999), and **restart HOI4** — the game parses mod files only
+   once, at application launch, so an edit made while it runs is invisible
    ("Back to Menu → New Game" is not enough). Every number is its own
    reproducible world. This is an engine necessity, not a quirk: during
    scenario setup the random generator is deterministic, so lobby-time
@@ -338,6 +344,7 @@ starting borders.
 | `common/on_actions/ZZ_random_world_on_actions.txt` | "At every session start ban factions; every week re-ban them." |
 | `common/scripted_effects/random_world_scripted_effects.txt` | The entire algorithm (sections 0–12, commented). |
 | `common/scripted_effects/rw_world_seed.txt` | The one number that selects **which** world is generated — edit for a new world, keep to replay one. |
+| `randomize_seed_and_play.bat` (mod root) | One-click helper: writes a random seed and starts HOI4 — every launch a new world. Run it while the game is closed. |
 | `history/countries/TAG - Name.txt` | Custom country's 1936 setup: capital, **its starting borders** (`transfer_state` + `add_state_core`), techs, politics, equipment. |
 | `history/units/TAG_1936.txt` | Its division blueprint (so it can train troops immediately). |
 | `localisation/english/random_world_l_english.yml` | The names: 4 ideology names per custom country. **Must stay UTF-8 with BOM** (it already is; editors keep it if you just edit and save). |

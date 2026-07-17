@@ -357,3 +357,23 @@ on an already-randomized lobby map, without restarting.
    launch, seed number becomes irrelevant). Decision fallback unchanged.
 4. GUIDE/README wording updated throughout; seed file added to the file
    table.
+
+---
+
+## 14. Follow-up changes (v1.8)
+
+Question from the play-tester: can an external script refresh the world
+without restarting HOI4? Answer: no tool can — the engine parses mod files
+once at application launch and offers no way to re-read them — but a script
+can make the restart frictionless:
+
+1. **`randomize_seed_and_play.bat`** (mod root, Windows): run with the game
+   closed — writes a random seed (0–499) into `rw_world_seed.txt` and
+   auto-starts `hoi4.exe` (path configurable inside; falls back to
+   "seed saved, start the game yourself"). Every launch = a new world,
+   seed printed for replay bookkeeping.
+2. **Burn-loop hard cap** added (1000 iterations): seeds above the cap
+   clamp instead of producing undefined behavior; documented range is now
+   0–999.
+3. Docs updated: GUIDE Part 6 item 6, file table; seed file header points
+   at the script.

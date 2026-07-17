@@ -6,12 +6,16 @@
 # engine seed - the same trick vanilla uses for its weather seed 22345).
 # Consequence: the number below fully decides WHICH world you get.
 #
-#     >>>  CHANGE THE NUMBER (any whole number from 0 to 10000),  <<<
-#     >>>  RESTART HOI4, START A NEW GAME - DIFFERENT WORLD       <<<
+#     >>>  CHANGE THE NUMBER (any whole number from 0 to 999),  <<<
+#     >>>  RESTART HOI4, START A NEW GAME - DIFFERENT WORLD     <<<
 #
 # The full game restart is REQUIRED: HOI4 parses mod files exactly once,
 # during application launch. Edits made while the game is running are
 # invisible to it - "Back to Menu -> New Game" is not enough.
+#
+# LAZY OPTION: double-click randomize_seed_and_play.bat in the mod root -
+# it writes a random number here and starts the game for you, so every
+# launch is a new world with zero manual editing.
 #
 # Same number = exactly the same world, every time. That gives you:
 #   - reproducible worlds: write a number down to replay that world later;

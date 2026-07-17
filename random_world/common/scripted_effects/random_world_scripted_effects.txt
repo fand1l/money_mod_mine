@@ -86,7 +86,10 @@ rw_randomize_world = {
 rw_burn_random_draws = {
 	set_variable = { global.rw_burn_i = 0 }
 	while_loop_effect = {
-		limit = { check_variable = { global.rw_burn_i < global.rw_world_seed } }
+		limit = {
+			check_variable = { global.rw_burn_i < global.rw_world_seed }
+			check_variable = { global.rw_burn_i < 1000 }	# hard cap: seeds above 1000 clamp
+		}
 		add_to_variable = { global.rw_burn_i = 1 }
 		random_list = {
 			1 = { set_variable = { global.rw_burn_junk = 1 } }
