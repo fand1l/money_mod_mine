@@ -45,12 +45,12 @@
 #    alone also runs automatically at every session start via on_startup.
 # ==============================================================================
 rw_randomize_world = {
-	# The "done" flag is set HERE, not by the callers. There are three
-	# trigger layers (bookmark effect -> on_startup -> manual decision), all
-	# guarded by this flag: whichever layer actually works on the installed
-	# engine build runs the reshuffle once, and the later layers no-op.
-	# If a layer is silently inert, the flag stays unset and the next layer
-	# still fires - nothing can get lost.
+	# The "done" flag is set HERE, not by the callers. Trigger layers, all
+	# guarded by this flag: on_startup (primary - right after pressing Play,
+	# fresh random seed every launch) -> manual decision (fallback, visible
+	# only while the flag is unset) -> plus an optional, default-disabled
+	# lobby-time layer in common/bookmarks/ (fixed seed - identical world
+	# every campaign). Whichever layer runs first wins; the rest no-op.
 	set_global_flag = rw_world_randomized
 	log = "[RW] world randomization: START"
 	rw_disable_factions_for_all = yes

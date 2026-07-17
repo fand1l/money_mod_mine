@@ -309,3 +309,27 @@ common/on_actions/ZZ_random_world_on_actions.txt:32/35: same
    works as designed.
 4. GUIDE: log-check ladder and substitution table updated with the
    "Invalid Scope / provided: None" case.
+
+---
+
+## 12. Follow-up changes (v1.6)
+
+Play-test: the reshuffle finally ran — but every New Game produced the
+IDENTICAL randomized world.
+
+1. **Root cause:** during scenario setup the engine seeds its random
+   generator with a fixed value (the same reason vanilla hardcodes
+   `randomize_weather = 22345`), so any randomness consumed at bookmark-
+   effect time repeats deterministically each campaign. Randomness consumed
+   *inside* the session (after Play) is seeded fresh per launch — which is
+   why the earlier decision-triggered runs varied.
+2. **New default:** the reshuffle fires from `on_startup` (right after
+   pressing Play) → a genuinely fresh world every New Game. The player
+   picks a country on the pre-reshuffle lobby map.
+3. **Lobby-time mode kept as an explicit opt-in:** the bookmark-effect call
+   remains in `the_gathering_storm.txt`, commented out, with the trade-off
+   documented inline ("world visible in the lobby" ⟷ "identical world
+   every campaign"). The two properties are mutually exclusive at engine
+   level.
+4. GUIDE: intro, Part 6 flow, Part 7, FAQ and troubleshooting updated with
+   the trade-off; new troubleshooting row for "same world every campaign".

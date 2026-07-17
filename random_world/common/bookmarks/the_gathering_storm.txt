@@ -10,12 +10,14 @@
 #      straight to picking a country on the map.
 #   2. default_country = "---" (= "other countries"). If your error.log ever
 #      complains about it, replace "---" with any tag, e.g. NES.
-#   3. The effect block below is ATTEMPT #1 (of 3) to run the reshuffle - at
-#      scenario setup, BEFORE the map lobby, so ideally you pick a country
-#      on an already-randomized map. If this attempt is inert on your engine
-#      build, attempt #2 (on_startup - right after pressing Play) and
-#      attempt #3 (the manual decision) take over automatically: the guard
-#      flag is set inside rw_randomize_world itself, only when it really ran.
+#   3. The effect block below can OPTIONALLY run the reshuffle at scenario
+#      setup, BEFORE the map lobby - but it is DISABLED by default, because
+#      the setup-time random generator is seeded with a FIXED value (same
+#      idea as the hardcoded weather seed), which produces THE IDENTICAL
+#      world every single campaign. The default trigger is on_startup
+#      (right after pressing Play), where the generator differs per launch
+#      and every New Game gets a fresh world. Uncomment below to trade
+#      "fresh world each campaign" for "world visible in the lobby".
 #
 # IMPORTANT: if your game version names this file differently, the override
 # will not load. Open the GAME's folder common/bookmarks/ and make sure the
@@ -38,18 +40,19 @@ bookmarks = {
 
 		effect = {
 			randomize_weather = 22345 # <- DO NOT REMOVE
-			# The bookmark effect runs with NO active scope, and the engine
-			# refuses to invoke scripted effects from a scope-less context
-			# ("Invalid Scope ... provided: None" in error.log). So we first
-			# step into an arbitrary existing country - the reshuffle itself
-			# operates on the whole world regardless of which country hosts
-			# the call.
-			random_country = {
-				if = {
-					limit = { NOT = { has_global_flag = rw_world_randomized } }
-					rw_randomize_world = yes
-				}
-			}
+			# OPTIONAL lobby-time reshuffle - DISABLED by default (see note 3
+			# in the header): the setup random seed is fixed, so this spot
+			# produces the same world every campaign. Remove the # from the
+			# five lines below to see the randomized world already in the
+			# lobby, accepting that every campaign becomes identical.
+			# (random_country is required: scripted effects cannot be called
+			# from this scope-less context.)
+			#random_country = {
+			#	if = {
+			#		limit = { NOT = { has_global_flag = rw_world_randomized } }
+			#		rw_randomize_world = yes
+			#	}
+			#}
 		}
 	}
 }
