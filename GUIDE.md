@@ -252,13 +252,21 @@ exist before any randomization.
    country is accidentally wiped off the map before it received its own seed
    (the classic bug of naive randomizers: someone's seed lands on
    Luxembourg's only state and Luxembourg silently stops existing).
-6. **Random seeds for everyone else.** Every pool country gets one random
-   free, non-protected, non-wasteland state — its new "starting point".
+6. **Random seeds for everyone else, spread apart.** Every pool country gets
+   one random free, non-protected, non-wasteland state — its new "starting
+   point". To avoid ugly shapes later, the seeder first looks for spots with
+   **two full rings of unclaimed neighbors** around them, then one ring,
+   then anywhere — countries that start far apart can grow into round blobs
+   before they collide.
 7. **Growth, round by round** *(the balance mechanism)*: all countries take
    turns; on its turn a country below the target size claims **one** free
    state **touching** its territory. Repeat rounds until a whole round
    changes nothing. Because everyone adds at most one state per round, sizes
-   stay nearly equal for as long as geography allows.
+   stay nearly equal for as long as geography allows. Each grab prefers, in
+   order: **sealing holes** (free states already surrounded by claimed land)
+   → **uncontested land** (free states touching no other country's claims)
+   → anything adjacent. That anti-snake ordering is what keeps countries
+   compact instead of stretched along corridors.
 8. **Overflow pass:** the same loop with the size cap removed, to swallow
    pockets only reachable by already-full countries. Nothing may stay empty.
 9. **Islands** (exempt from the land rule by design): while anything is
@@ -272,6 +280,16 @@ exist before any randomization.
 11. **Industry re-roll:** every state's built civilian factories (0–8),
     military factories (0–6) and — on coastal states — dockyards (0–5) are
     set to weighted random values. Slot limits and population: untouched.
+
+**Tuning switch — fully random custom countries.** By design the custom
+countries keep their historic homes and only everyone else is random. If you
+want NES/KAM/KHA thrown into the same lottery as everyone, open
+`random_world_scripted_effects.txt`, find `rw_seed_custom_countries`
+(section 5) and change `set_variable = { global.rw_use_historic_homes = 1 }`
+to `= 0` — they will then seed anywhere on the planet. Their borders on the
+pre-reshuffle starting map are a separate feature: remove the
+`transfer_state` / `add_state_core` lines in their `history/countries` files
+if you want those gone too.
 
 ## Part 8 — Which file does what (one line each)
 
@@ -316,6 +334,7 @@ the line `error.log` complains about and try the replacement:
 | `set_building_level = { type = X level = N instant_build = yes }` | remove ` instant_build = yes`; if still erroring, replace the line with `add_building_construction = { type = X level = N instant_build = yes }` (adds on top of vanilla instead of replacing — an acceptable fallback) |
 | `while_loop_effect` unknown | replace each `while_loop_effect = { limit = {...}` with `for_loop_effect = { start = 0 end = 200` and move the old `limit` triggers into an `if` wrapped around the loop body |
 | `impassable = yes` unknown trigger | delete that single line (wasteland then just becomes seedable — cosmetic) |
+| `all_neighbor_state` unknown trigger | delete the whole "Tier 1" `random_state` block in `rw_capped_growth` (hole-sealing is a shape optimization; Tiers 2–3 still cover everything) |
 | `white_peace = PREV` | `white_peace = { tag = PREV }` |
 
 ## Part 10 — FAQ and honest limitations

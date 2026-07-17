@@ -211,3 +211,23 @@ Requested after the first release:
    The randomizer's dynamic collision fallback remains as a safety net, and
    `rw_build_pool` was simplified: customs now exist before pool building,
    so the special-case size bookkeeping was deleted.
+
+---
+
+## 8. Follow-up changes (v1.2)
+
+Requested after play-testing the reshuffle:
+
+1. **Historic-homes switch.** `global.rw_use_historic_homes` (top of
+   `rw_seed_custom_countries`, default `1`) — set to `0` to give the custom
+   countries fully random seeds like everyone else. Keeping them at home was
+   the original spec; the play-tester was surprised by it, so it is now an
+   explicit, documented one-number choice.
+2. **Seed spacing.** Random seeds now try to land with two full rings of
+   unclaimed neighbors, then one ring, then anywhere. Adjacent seeds were a
+   main cause of countries squeezing into corridors.
+3. **Anti-snake growth tiers.** Each growth turn now prefers: seal
+   fully-enclosed holes → grow into land touching no other country's claims
+   → any adjacent free state. Combined with seed spacing this produces
+   compact blobs instead of the elongated "snake" countries observed on the
+   first play-test map.

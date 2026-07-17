@@ -200,14 +200,34 @@ rw_claim_this_state = {
 # (see rw_seed_at_home_state below).
 # ==============================================================================
 rw_seed_custom_countries = {
-	NES = { set_variable = { rw_home_state = 196 } }	# Podillia (Vinnytsia state)
-	KAM = { set_variable = { rw_home_state = 78 } }	# Khotyn/Bessarabia, next door to Kamianets-Podilskyi
-	KHA = { set_variable = { rw_home_state = 198 } }	# Kharkiv region
+	# ----------------------------------------------------------------------
+	# SWITCH: should the custom countries start at their HISTORIC HOMES?
+	#   1 = NES/KAM/KHA grow from their historic home states (the original
+	#       design) - only the rest of the world is random.
+	#   0 = the custom countries are treated EXACTLY like everyone else and
+	#       get a completely random seed somewhere on the planet.
+	# Note: their borders on the pre-randomization starting map are a
+	# separate feature (history/countries files). If you also want them
+	# borderless BEFORE the reshuffle, remove the transfer_state /
+	# add_state_core lines there.
+	# ----------------------------------------------------------------------
+	set_variable = { global.rw_use_historic_homes = 1 }
 
-	NES = { rw_seed_at_home_state = yes }
-	KAM = { rw_seed_at_home_state = yes }
-	KHA = { rw_seed_at_home_state = yes }
-	log = "[RW] custom countries seeded at their homes"
+	if = {
+		limit = { check_variable = { global.rw_use_historic_homes = 1 } }
+
+		NES = { set_variable = { rw_home_state = 196 } }	# Podillia (Vinnytsia state)
+		KAM = { set_variable = { rw_home_state = 78 } }	# Khotyn/Bessarabia, next door to Kamianets-Podilskyi
+		KHA = { set_variable = { rw_home_state = 198 } }	# Kharkiv region
+
+		NES = { rw_seed_at_home_state = yes }
+		KAM = { rw_seed_at_home_state = yes }
+		KHA = { rw_seed_at_home_state = yes }
+		log = "[RW] custom countries seeded at their historic homes"
+	}
+	else = {
+		log = "[RW] historic homes disabled - custom countries get random seeds"
+	}
 }
 
 # Runs in COUNTRY scope. Tries, in order:
@@ -296,16 +316,56 @@ rw_build_pool = {
 
 
 # ==============================================================================
-# 7. RANDOM SEEDS FOR EVERYONE ELSE
+# 7. RANDOM SEEDS FOR EVERYONE ELSE (with SPACING to keep shapes compact)
 # ------------------------------------------------------------------------------
-# Every pool country that does not have a seed yet (rw_size still 0 - i.e.
-# everyone except NES/KAM/KHA) gets ONE completely random free state:
-# not already claimed, not protected (see phase 6), not an impassable
-# wasteland (nobody wants a capital in the middle of the Sahara).
+# Every pool country that does not have a seed yet (rw_size still 0) gets ONE
+# random free state: not already claimed, not protected (see phase 6), not an
+# impassable wasteland (nobody wants a capital in the middle of the Sahara).
+#
+# WHY THREE ATTEMPTS: if two seeds land right next to each other, the two
+# countries collide immediately and then squeeze along whatever free corridor
+# remains -> long snake-shaped countries. So each country first tries to seed
+# where NO already-claimed state exists within TWO rings of neighbors, then
+# within ONE ring, and only if the map is too crowded takes any free state.
+# A random_state whose conditions match nothing simply does nothing, so after
+# each attempt we check "do I still have 0 states?" before trying the next.
 # ==============================================================================
 rw_seed_all_countries = {
 	for_each_scope_loop = {
 		array = global.rw_pool
+
+		# Attempt 1: two full rings of neighbors free of anyone's claims.
+		if = {
+			limit = { check_variable = { rw_size < 1 } }
+			random_state = {
+				limit = {
+					NOT = { has_variable = rw_claimed_by }
+					NOT = { has_variable = rw_protected }
+					NOT = { impassable = yes }
+					NOT = { any_neighbor_state = { has_variable = rw_claimed_by } }
+					NOT = {
+						any_neighbor_state = {
+							any_neighbor_state = { has_variable = rw_claimed_by }
+						}
+					}
+				}
+				rw_claim_this_state = yes
+			}
+		}
+		# Attempt 2: at least the direct neighbors are free of claims.
+		if = {
+			limit = { check_variable = { rw_size < 1 } }
+			random_state = {
+				limit = {
+					NOT = { has_variable = rw_claimed_by }
+					NOT = { has_variable = rw_protected }
+					NOT = { impassable = yes }
+					NOT = { any_neighbor_state = { has_variable = rw_claimed_by } }
+				}
+				rw_claim_this_state = yes
+			}
+		}
+		# Attempt 3: anywhere free at all (guaranteed fallback).
 		if = {
 			limit = { check_variable = { rw_size < 1 } }
 			random_state = {
@@ -352,6 +412,19 @@ rw_seed_all_countries = {
 #     rw_claim_this_state = yes           <- claim it (PREV = the country)
 #   }
 #
+# ANTI-SNAKE SHAPING: a purely random frontier grab produces long snake
+# countries, because growth that hits a neighbor keeps sliding along the one
+# free corridor that remains. So on its turn a country tries THREE picks, in
+# order of niceness, and stops at the first that succeeds ("did my rw_size
+# change?" tells us whether a pick found something):
+#   Tier 1 - HOLE FILLING: a free state next to me whose EVERY neighbor is
+#            already claimed (by anyone). Sealing these pockets first keeps
+#            borders smooth and prevents ugly leftover bites.
+#   Tier 2 - UNCONTESTED GROWTH: a free state next to me that touches NO
+#            other country's claims - growing into open land makes round
+#            blobs instead of interlocking fingers along contact lines.
+#   Tier 3 - ANYTHING ADJACENT: the plain rule, guaranteed fallback.
+#
 # The while-loop is guarded three ways: free states remain, last round made
 # progress, and a hard safety counter (< 200 rounds) so the game can never
 # hang even if something unexpected happens.
@@ -371,14 +444,50 @@ rw_capped_growth = {
 			array = global.rw_pool
 			if = {
 				limit = { check_variable = { rw_size < global.rw_target_size } }
+				set_variable = { rw_size_before = rw_size }
+
+				# --- Tier 1: seal fully-enclosed holes touching me ---
 				random_state = {
 					limit = {
 						NOT = { has_variable = rw_claimed_by }
 						any_neighbor_state = {
 							check_variable = { rw_claimed_by = PREV.PREV.id }
 						}
+						all_neighbor_state = { has_variable = rw_claimed_by }
 					}
 					rw_claim_this_state = yes
+				}
+				# --- Tier 2: grow into land nobody else touches yet ---
+				if = {
+					limit = { check_variable = { rw_size = rw_size_before } }
+					random_state = {
+						limit = {
+							NOT = { has_variable = rw_claimed_by }
+							any_neighbor_state = {
+								check_variable = { rw_claimed_by = PREV.PREV.id }
+							}
+							NOT = {
+								any_neighbor_state = {
+									has_variable = rw_claimed_by
+									NOT = { check_variable = { rw_claimed_by = PREV.PREV.id } }
+								}
+							}
+						}
+						rw_claim_this_state = yes
+					}
+				}
+				# --- Tier 3: any free state adjacent to me (old behavior) ---
+				if = {
+					limit = { check_variable = { rw_size = rw_size_before } }
+					random_state = {
+						limit = {
+							NOT = { has_variable = rw_claimed_by }
+							any_neighbor_state = {
+								check_variable = { rw_claimed_by = PREV.PREV.id }
+							}
+						}
+						rw_claim_this_state = yes
+					}
 				}
 			}
 		}
