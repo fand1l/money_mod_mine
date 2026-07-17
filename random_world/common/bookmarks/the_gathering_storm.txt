@@ -38,9 +38,17 @@ bookmarks = {
 
 		effect = {
 			randomize_weather = 22345 # <- DO NOT REMOVE
-			if = {
-				limit = { NOT = { has_global_flag = rw_world_randomized } }
-				rw_randomize_world = yes
+			# The bookmark effect runs with NO active scope, and the engine
+			# refuses to invoke scripted effects from a scope-less context
+			# ("Invalid Scope ... provided: None" in error.log). So we first
+			# step into an arbitrary existing country - the reshuffle itself
+			# operates on the whole world regardless of which country hosts
+			# the call.
+			random_country = {
+				if = {
+					limit = { NOT = { has_global_flag = rw_world_randomized } }
+					rw_randomize_world = yes
+				}
 			}
 		}
 	}

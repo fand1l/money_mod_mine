@@ -349,8 +349,11 @@ and search for `[RW]`:
    missing from the pre-game map is the same disease — they come from plain
    history files and need no scripts at all.
 2. **`on_startup fired` present, but no `world randomization: START`** —
-   your mod files are older than v1.4 (since v1.4 `on_startup` itself
-   launches the reshuffle). Update the mod files.
+   either your mod files are older than v1.5 (update them), or `error.log`
+   shows `Invalid Scope ... provided: None` on the calling line — that
+   means a scripted-effect call sits in a scope-less context and must be
+   wrapped in `random_country = { ... }` (v1.5 already does this for both
+   automatic triggers; re-apply it if you edited those files).
 3. **`START` present but no `DONE`** — the script died mid-way on a keyword
    your game version spells differently; `error.log` names the exact file
    and line. Fix it with the substitution table below.
@@ -377,6 +380,7 @@ the line `error.log` complains about and try the replacement:
 | `impassable = yes` unknown trigger | delete that single line (wasteland then just becomes seedable — cosmetic) |
 | `all_neighbor_state` unknown trigger | delete the whole "Tier 1" `random_state` block in `rw_capped_growth` (hole-sealing is a shape optimization; Tiers 2–3 still cover everything) |
 | `white_peace = PREV` | `white_peace = { tag = PREV }` |
+| `Invalid Scope ..., provided: None` on a `rw_...` call | The call site has no active scope (bookmark `effect`, `on_startup`). Wrap the call: `random_country = { rw_... = yes }` — already done in v1.5 for both stock call sites. |
 
 ## Part 10 — FAQ and honest limitations
 

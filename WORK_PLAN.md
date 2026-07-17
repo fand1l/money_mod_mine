@@ -279,3 +279,33 @@ session at all. Two fixes regardless:
 3. **`on_startup` now always logs** `[RW] on_startup fired` — the
    definitive "is the mod loaded at all?" probe.
 4. GUIDE: added "The 60-second log check" diagnostic ladder.
+
+---
+
+## 11. Follow-up changes (v1.5)
+
+The play-tester's logs found the real blocker, and disproved the "mod not
+loaded" hypothesis from v1.4 (the mod loaded fine; the custom countries were
+on the map all along):
+
+```
+common/bookmarks/the_gathering_storm.txt:43: rw_randomize_world:
+  Invalid Scope, supported: State|Country|..., provided: None
+common/on_actions/ZZ_random_world_on_actions.txt:32/35: same
+```
+
+1. **Root cause:** the engine refuses to invoke *scripted effects* from
+   scope-less contexts — and both automatic triggers (bookmark `effect`,
+   `on_startup`) run with scope "None". Plain effects (`log`,
+   `randomize_weather`, listers) work there; custom scripted effects do not.
+   This also explains why the v1.1 decision-based trigger worked: decisions
+   execute in the player country's scope.
+2. **Fix:** both call sites now wrap the calls in `random_country = { ... }`
+   — entering an arbitrary existing country's scope. The reshuffle operates
+   on the whole world via global listers, so the host country is irrelevant.
+3. **Confirmed by timestamps:** on the tester's build the bookmark effect
+   executes at scenario setup, several seconds *before* the map lobby opens
+   — so with the scope fix, picking a country on an already-randomized map
+   works as designed.
+4. GUIDE: log-check ladder and substitution table updated with the
+   "Invalid Scope / provided: None" case.

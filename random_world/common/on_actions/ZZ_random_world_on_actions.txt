@@ -29,10 +29,17 @@ on_actions = {
 	on_startup = {
 		effect = {
 			log = "[RW] on_startup fired - mod files are loaded"
-			rw_disable_factions_for_all = yes
-			if = {
-				limit = { NOT = { has_global_flag = rw_world_randomized } }
-				rw_randomize_world = yes
+			# on_startup also runs with NO active scope, and scripted effects
+			# cannot be invoked from a scope-less context (error.log says
+			# "Invalid Scope ... provided: None"). Stepping into any existing
+			# country first fixes that; the effects themselves operate on the
+			# whole world.
+			random_country = {
+				rw_disable_factions_for_all = yes
+				if = {
+					limit = { NOT = { has_global_flag = rw_world_randomized } }
+					rw_randomize_world = yes
+				}
 			}
 		}
 	}
