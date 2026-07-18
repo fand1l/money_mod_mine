@@ -270,7 +270,11 @@ existence so the reshuffle can include them in the pool.
    and *Join Faction*. A weekly hook re-applies the rules so countries born
    later (civil wars, released nations) are covered forever.
 2. **Clean the table.** All puppets are freed, all running wars are ended in
-   white peace. Now land can move without dragging wars around.
+   white peace, and then **every land division of every country is
+   deleted** — equipment included. Nobody drags a vanilla army (or the
+   stockpile from disbanding one) into the new world; everyone rebuilds
+   from their new, equalized factories on equal footing. Navies and air
+   wings are relocated to owned bases by the engine automatically.
 3. **Count the map.** The script counts every land state (that number ÷
    number of countries = the **target size** everyone should reach).
 4. **(Optional) seed the custom countries** on their home states. **Off by
@@ -345,9 +349,14 @@ ported from the author's other mod. How it plays:
    pictures, custom traits, the handful of custom techs/units some silly
    branches use (flame cavalry and friends), localisation.
 
-Interaction with the world reshuffle: none to worry about — buffs are
-national spirits on countries, they survive the territory randomization,
-and the order (buffs first or reshuffle first) does not matter.
+Interaction with the world reshuffle: buff **spirits** survive it fine, but
+since v2.1 the reshuffle **deletes every division on the map** — including
+free divisions a buff path may have just spawned. Recommended order
+therefore: press **"Randomize the World!" first**, pick your buff paths
+after. (Two equalizations were also applied to the imported events for the
+random-map context: the AI-chance bias favoring vanilla majors and the
+majors-exception on the *destined greatness* roll are gone — everyone has
+equal chances.)
 
 **IMPORTANT:** disable the original rcpZ/UGN mod in your playset once this
 version is installed. Running both at once duplicates every event, idea and
@@ -434,6 +443,7 @@ the line `error.log` complains about and try the replacement:
 | `all_neighbor_state` unknown trigger | delete the whole "Tier 1" `random_state` block in `rw_capped_growth` (hole-sealing is a shape optimization; Tiers 2–3 still cover everything) |
 | `white_peace = PREV` | `white_peace = { tag = PREV }` |
 | `Invalid Scope ..., provided: None` on a `rw_...` call | The call site has no active scope (bookmark `effect`, `on_startup`). Wrap the call: `random_country = { rw_... = yes }` — already done in v1.5 for both stock call sites. |
+| `delete_units` unknown effect (older patches) | In `rw_delete_all_armies`, try `delete_units = { disband = yes }`; if the effect itself is missing, delete the `rw_delete_all_armies = yes` line in the master switch — armies then survive the reshuffle (they teleport home) and only this equalization is lost. |
 
 ## Part 10 — FAQ and honest limitations
 
@@ -444,9 +454,11 @@ the line `error.log` complains about and try the replacement:
   Every campaign's reshuffle is fresh. If you'd rather pick countries on
   the finished map (e.g. multiplayer), enable the lobby-time trigger —
   Part 6, item 6 — and accept its fixed-seed determinism.
-- **Armies at randomization** may teleport: units standing on land that
-  changed hands get auto-relocated by the engine. Harmless, settles
-  immediately.
+- **All land divisions are deleted at randomization** — deliberately, for
+  equal chances: no army may keep standing in what became foreign land,
+  and the old majors may not carry their huge forces into the new world.
+  Everyone (including you) rebuilds from scratch. Fleets and air wings are
+  not deleted; the engine relocates them to owned bases.
 - **Vanilla focus trees** still reference historical geography ("Danzig or
   War" when Germany is in Peru). That's inherent to every randomizer mod;
   national focuses stay usable, some just become nonsense-flavored. The

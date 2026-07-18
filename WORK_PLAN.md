@@ -421,3 +421,26 @@ repository, `fand1l/hoi4_rcpZ_mod` ("та кнопка яка в decisions і в
    reshuffle; ordering between buff selection and the reshuffle decision
    is irrelevant. Users must disable the standalone rcpZ/UGN mod to avoid
    duplicate definitions.
+
+---
+
+## 17. Follow-up changes (v2.1)
+
+Play-test: divisions were left standing inside now-foreign borders after
+the reshuffle, and the old majors kept their armies ("everyone must have
+equal chances").
+
+1. **New phase `rw_delete_all_armies`** (runs after diplomacy cleanup,
+   before seeding): every country's land divisions are deleted with
+   `disband = no` — equipment dies with them, so former majors don't get a
+   stockpile windfall either. Navies/air wings are engine-relocated, not
+   deleted (no scriptable effect exists for them).
+2. **Equal chances in the imported buff events:** removed the x2 AI-chance
+   bias for JAP/USA/SOV/GER/ENG on the "great history" path and the
+   vanilla-majors exception on the destined-greatness roll (they used to
+   get failing_industry instead). Marked inline with comments.
+3. Docs: recommended order is now reshuffle first, buffs after (buff-
+   spawned free divisions would be deleted by a later reshuffle);
+   GUIDE Part 7/7.5/FAQ updated; substitution row for `delete_units`.
+   Left as-is per author's flavor: the Japan-only Yamato/Zero decisions
+   from the imported mod (flagged to the user as a possible follow-up).

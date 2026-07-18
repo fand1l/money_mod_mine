@@ -56,6 +56,7 @@ rw_randomize_world = {
 	rw_burn_random_draws = yes
 	rw_disable_factions_for_all = yes
 	rw_clean_diplomacy = yes
+	rw_delete_all_armies = yes
 	rw_init_state_counters = yes
 	rw_seed_custom_countries = yes
 	rw_build_pool = yes
@@ -150,6 +151,33 @@ rw_clean_diplomacy = {
 		}
 	}
 	log = "[RW] subjects freed, wars white-peaced"
+}
+
+
+# ==============================================================================
+# 2.5 DELETE ALL ARMIES (equal chances for everyone)
+# ------------------------------------------------------------------------------
+# Without this, every division would keep standing where it was - i.e. deep
+# inside what is now FOREIGN territory - and the old majors would carry
+# their huge vanilla armies into the new world. So the reshuffle deletes
+# EVERY land division of EVERY country outright.
+#
+# disband = no destroys the divisions together with their equipment.
+# (disband = yes would refund all that equipment into national stockpiles,
+# handing the former majors a massive head start - the opposite of equal
+# chances. Everyone rebuilds from their new, equalized factories instead.)
+#
+# Navies and air wings are left alone: the engine offers no clean
+# "delete all ships/wings" effect, and it relocates them to owned bases
+# automatically after the territory moves.
+# ==============================================================================
+rw_delete_all_armies = {
+	every_country = {
+		delete_units = {
+			disband = no
+		}
+	}
+	log = "[RW] all land divisions deleted - every army rebuilds from zero"
 }
 
 
