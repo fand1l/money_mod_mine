@@ -1,0 +1,96 @@
+spriteTypes = {		
+
+
+# Amphibious Infantry
+   spriteType = { 
+     name = "GFX_unit_seaborn_infantry_icon_medium"				
+     textureFile = "gfx/interface/counters/divisions_large/unit_seaborn_infantry_icon.dds"  ## Thats the paradox shepe, but you can use any path and file naming you want
+     noOfFrames = 2
+   }
+   
+   spriteType = { 
+     name = "GFX_unit_seaborn_infantry_icon_medium_white"						
+     textureFile = "gfx/interface/counters/divisions_small/onmap_unit_seaborn_infantry_icon.dds" 
+     noOfFrames = 2
+   }
+
+   spriteType = {
+     name = "GFX_unit_seaborn_infantry_icon_small"
+     texturefile = "gfx/texticons/unit_seaborn_infantry_icon_small.dds"
+     legacy_lazy_load = no
+     noOfFrames = 2		
+   }
+
+# Dino Cavalry
+   spriteType = { 
+     name = "GFX_unit_dino_cav_icon_medium"				
+     textureFile = "gfx/interface/counters/divisions_large/unit_Trex2_icon.dds"  ## Thats the paradox shepe, but you can use any path and file naming you want
+     noOfFrames = 2
+   }
+   
+   spriteType = { 
+     name = "GFX_unit_dino_cav_icon_medium_white"						
+     textureFile = "gfx/interface/counters/divisions_small/onmap_unit_Trex2_icon.dds" 
+     noOfFrames = 2
+   }
+
+   spriteType = {
+     name = "GFX_unit_dino_cav_icon_small"
+     texturefile = "gfx/texticons/unit_Trex2_icon_small.dds"
+     legacy_lazy_load = no
+     noOfFrames = 2		
+   }
+
+# flame horse
+   spriteType = { 
+     name = "GFX_unit_flame_cavalry_icon_medium"				
+     textureFile = "gfx/interface/counters/divisions_large/unit_flame_cavalry_icon.dds"  ## Thats the paradox shepe, but you can use any path and file naming you want
+     noOfFrames = 2
+   }
+   
+   spriteType = { 
+     name = "GFX_unit_flame_cavalry_icon_medium_white"						
+     textureFile = "gfx/interface/counters/divisions_small/onmap_unit_flame_cavalry_icon.dds" 
+     noOfFrames = 2
+   }
+
+   spriteType = {
+     name = "GFX_unit_flame_cavalry_icon_small"
+     texturefile = "gfx/texticons/unit_flame_cavalry_icon_small.dds"
+     legacy_lazy_load = no
+     noOfFrames = 2		
+   }
+   
+# aerogavin ripoff
+   spriteType = { 
+     name = "GFX_unit_mechanized_paratroopers_icon_medium"				
+     textureFile = "gfx/interface/counters/divisions_large/unit_paratroop_mech_icon.dds"  ## Thats the paradox shepe, but you can use any path and file naming you want
+     noOfFrames = 2
+   }
+   
+   spriteType = { 
+     name = "GFX_unit_mechanized_paratroopers_icon_medium_white"						
+     textureFile = "gfx/interface/counters/divisions_small/onmap_unit_paratroop_mech_icon.dds" 
+     noOfFrames = 2
+   }
+
+   spriteType = {
+     name = "GFX_unit_mechanized_paratroopers_icon_small"
+     texturefile = "gfx/texticons/unit_paratroop_mech_icon_small.dds"
+     legacy_lazy_load = no
+     noOfFrames = 2		
+   }
+   
+# cultist company
+   spriteType = { 
+     name = "GFX_unit_cultist_company_icon_medium"				
+     textureFile = "gfx/interface/counters/divisions_large/unit_cultist_company_icon.dds"  ## Thats the paradox shepe, but you can use any path and file naming you want
+     noOfFrames = 2
+   }
+   spriteType = {
+     name = "GFX_unit_flame_cavalry_icon_small"
+     texturefile = "gfx/texticons/unit_cultist_company_icon_small.dds"
+     legacy_lazy_load = no
+     noOfFrames = 2		
+   }
+}

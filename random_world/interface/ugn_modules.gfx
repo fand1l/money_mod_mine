@@ -1,0 +1,87 @@
+SpriteTypes = {
+	
+###GROUND###
+	
+	spriteType = {
+		name = "GFX_EMI_ugn_tank_magma_engine"
+		textureFile = "gfx/interface/equipmentdesigner/tanks/modules/tank_module_magma_engine.dds"
+		legacy_lazy_load = no
+	}
+	spriteType = {
+		name = "GFX_EMI_ugn_tank_magma_thrower"
+		textureFile = "gfx/interface/equipmentdesigner/tanks/modules/tank_module_magma_thrower.dds"
+		legacy_lazy_load = no
+	}
+	spriteType = {
+		name = "GFX_EMI_ugn_tank_lightning_call"
+		textureFile = "gfx/interface/equipmentdesigner/tanks/modules/tank_module_lightning_call.dds"
+		legacy_lazy_load = no
+	}
+	spriteType = {
+		name = "GFX_EMI_ugn_tank_module_alloy_armor_cast"
+		textureFile = "gfx/interface/equipmentdesigner/tanks/modules/tank_module_alloy_armor_cast.dds"
+		legacy_lazy_load = no
+	}
+	spriteType = {
+		name = "GFX_EMI_ugn_tank_module_alloy_armor_rivet"
+		textureFile = "gfx/interface/equipmentdesigner/tanks/modules/tank_module_alloy_armor_rivet.dds"
+		legacy_lazy_load = no
+	}
+	spriteType = {
+		name = "GFX_EMI_ugn_tank_module_alloy_armor_weld"
+		textureFile = "gfx/interface/equipmentdesigner/tanks/modules/tank_module_alloy_armor_weld.dds"
+		legacy_lazy_load = no
+	}
+	
+###NAVAL###
+	
+	spriteType = {
+		name = "GFX_EMI_light_ship_magma_engine"
+		textureFile = "gfx/interface/equipmentdesigner/naval/modules/icons/magma_engine.dds"
+		legacy_lazy_load = no
+	}
+	spriteType = {
+		name = "GFX_EMI_sub_ship_magma_engine"
+		textureFile = "gfx/interface/equipmentdesigner/naval/modules/icons/magma_engine.dds"
+		legacy_lazy_load = no
+	}
+	spriteType = {
+		name = "GFX_EMI_cruiser_ship_magma_engine"
+		textureFile = "gfx/interface/equipmentdesigner/naval/modules/icons/magma_engine.dds"
+		legacy_lazy_load = no
+	}
+	spriteType = {
+		name = "GFX_EMI_heavy_ship_magma_engine"
+		textureFile = "gfx/interface/equipmentdesigner/naval/modules/icons/magma_engine.dds"
+		legacy_lazy_load = no
+	}
+	spriteType = {
+		name = "GFX_EMI_carrier_ship_magma_engine"
+		textureFile = "gfx/interface/equipmentdesigner/naval/modules/icons/magma_engine.dds"
+		legacy_lazy_load = no
+	}
+	spriteType = {
+		name = "GFX_EMI_ship_lightning_call"
+		textureFile = "gfx/interface/equipmentdesigner/naval/modules/icons/ship_lightning_call.dds"
+		legacy_lazy_load = no
+	}
+	
+###AIR###
+	
+	spriteType = {
+		name = "GFX_EMI_airplane_magma_cannon"
+		textureFile = "gfx/interface/equipmentdesigner/planes/modules/airplane_magma_cannon.dds"
+		legacy_lazy_load = no
+	}
+	spriteType = {
+		name = "GFX_EMI_airplane_magma_engine"
+		textureFile = "gfx/interface/equipmentdesigner/planes/modules/airplane_magma_engine.dds"
+		legacy_lazy_load = no
+	}
+	spriteType = {
+		name = "GFX_EMI_airplane_magma_missile"
+		textureFile = "gfx/interface/equipmentdesigner/planes/modules/airplane_magma_missile.dds"
+		legacy_lazy_load = no
+	}
+	
+}

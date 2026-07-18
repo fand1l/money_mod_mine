@@ -1,0 +1,61 @@
+spriteTypes = {	
+
+# aero
+   	SpriteType = {
+		name = "GFX_aero_tech_0_medium"
+		texturefile = "gfx/interface/technologies/aero_hubert.dds"
+	}
+# dino
+	SpriteType = {
+		name = "GFX_dino_cav_tech_medium"
+		texturefile = "gfx/interface/technologies/trex_icon_large3.dds"
+	}
+	
+### EXOTIC MILITARY ###
+
+# magma
+	SpriteType = {
+		name = "GFX_magma_tech_debug_medium"
+		texturefile = "gfx/interface/technologies/ugn_magma.dds"
+	}
+	SpriteType = {
+		name = "GFX_magma_tech_0_medium"
+		texturefile = "gfx/interface/technologies/ugn_magma.dds"
+	}
+	SpriteType = {
+		name = "GFX_magma_tech_thrower_medium"
+		texturefile = "gfx/interface/technologies/ugn_magma.dds"
+	}
+	SpriteType = {
+		name = "GFX_magma_tech_engine_air_medium"
+		texturefile = "gfx/interface/technologies/ugn_magma.dds"
+	}
+	SpriteType = {
+		name = "GFX_magma_tech_engine_ship_medium"
+		texturefile = "gfx/interface/technologies/ugn_magma.dds"
+	}
+	SpriteType = {
+		name = "GFX_magma_tech_air_weapons_medium"
+		texturefile = "gfx/interface/technologies/ugn_magma.dds"
+	}
+
+# sea
+	SpriteType = {
+		name = "GFX_seaborn_infantry_tech_medium"
+		texturefile = "gfx/interface/technologies/sea_inf.dds"
+	}
+	
+# lightning
+	SpriteType = {
+		name = "GFX_lightning_tech_0_medium"
+		texturefile = "gfx/interface/technologies/ugn_lightning.dds"
+	}
+
+# alloy
+
+	SpriteType = {
+		name = "GFX_ugn_alloy_tech_0_medium"
+		texturefile = "gfx/interface/technologies/ugn_alloy_0.dds"
+	}
+
+}

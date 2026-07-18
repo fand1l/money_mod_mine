@@ -1,0 +1,933 @@
+ugn_decision_category = {
+    ugn_decision_0 = { # TRIGGER EVENT AGAIN
+		icon = GFX_decision_eng_propaganda_campaigns	#The left side icon to show for this decision.
+		
+		# CONDITIONS TO MAKE THIS DECISION/MISSION APPEAR AND EXECUTE
+		
+		available = {		#Conditions that will allow the player/AI to click the decision and execute its effect.
+			ROOT = {
+				is_ai = no
+			}
+		}
+		
+		fire_only_once = no		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_re_enable = 1	#The amount of days of days it will take for the decision to reappear. Not valid if fire_only_once is set to yes
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				is_ai = no
+			}
+		}		
+
+		cost = 0		#The cost to execute the decision, by default its political power.
+
+		# EFFECTS OF THIS DECISION/MISSION
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			country_event = { id = uniqueness.3 }
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 0		
+		}
+    }
+	ugn_decision_0a = { # TRIGGER EVENT FOR PUPPETS
+		icon = GFX_decision_eng_propaganda_campaigns	#The left side icon to show for this decision.
+		
+		# CONDITIONS TO MAKE THIS DECISION/MISSION APPEAR AND EXECUTE
+		
+		available = {		#Conditions that will allow the player/AI to click the decision and execute its effect.
+			ROOT = {
+				is_ai = no
+			}
+			any_country = {
+				is_puppet_of = ROOT
+				custom_trigger_tooltip = {
+					tooltip = tt_not_unique
+					NOT = {
+						has_country_flag = ugn_unique
+					}
+				}
+			}
+		}
+		
+		fire_only_once = no		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_re_enable = 1	#The amount of days of days it will take for the decision to reappear. Not valid if fire_only_once is set to yes
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				is_ai = no
+			}
+		}		
+
+		cost = 0		#The cost to execute the decision, by default its political power.
+
+		# EFFECTS OF THIS DECISION/MISSION
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			every_country = {
+				limit = {
+					is_puppet_of = ROOT
+					NOT = {
+						has_country_flag = ugn_unique
+					}
+				}
+				country_event = { id = uniqueness.3 }
+				set_country_flag = ugn_unique
+			}
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 0		
+		}
+    }
+	ugn_decision_1 = { # YAMATO
+		icon = GFX_decision_warship_ugn_icon	#The left side icon to show for this decision.
+		
+		# CONDITIONS TO MAKE THIS DECISION/MISSION APPEAR AND EXECUTE
+		
+		available = {		#Conditions that will allow the player/AI to click the decision and execute its effect.
+			
+			OR = {
+				not = { has_dlc = "Man the Guns" }
+				ROOT = {
+					has_tech = basic_light_battery
+					has_tech = basic_heavy_battery
+					has_tech = gw_artillery
+					has_tech = early_ship_hull_cruiser
+					has_tech = basic_fire_control_system
+					has_tech = interwar_antiair
+				}
+			}
+		}
+		
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_re_enable = 1	#The amount of days of days it will take for the decision to reappear. Not valid if fire_only_once is set to yes
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				original_tag = JAP
+			}
+		}		
+
+		cost = 0		#The cost to execute the decision, by default its political power.
+
+		# EFFECTS OF THIS DECISION/MISSION
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			if = {
+				limit = {
+					not = { has_dlc = "Man the Guns" }
+				}
+				add_tech_bonus = {
+					name = JAP_the_ultimate_battleship
+					bonus = 3.0
+					uses = 1
+					category = shbb_tech	
+				}
+			}
+			else = {
+				if = {
+					limit = {
+						not = { has_tech = ship_hull_super_heavy }
+					}
+					set_technology = {
+						ship_hull_super_heavy = 1
+					}
+				}
+				create_equipment_variant = {
+					name = "Yamato Class"
+					type = ship_hull_super_heavy_1
+					name_group = JAP_BB_HISTORICAL
+					parent_version = 0
+					modules = {
+						fixed_ship_battery_slot = ship_super_heavy_battery_1
+						fixed_ship_anti_air_slot = ship_anti_air_2
+						fixed_ship_fire_control_system_slot = ship_fire_control_system_1
+						fixed_ship_radar_slot = empty
+						fixed_ship_engine_slot = heavy_ship_engine_2
+						fixed_ship_secondaries_slot = ship_secondaries_2
+						fixed_ship_armor_slot = ship_armor_shbb
+						front_1_custom_slot = ship_anti_air_1
+						front_2_custom_slot = empty
+						mid_1_custom_slot = empty
+						mid_2_custom_slot = ship_secondaries_2
+						mid_3_custom_slot = ship_secondaries_2
+						rear_1_custom_slot = ship_super_heavy_battery_1
+						rear_2_custom_slot = ship_airplane_launcher_1
+					}
+				}
+				custom_effect_tooltip = JAP_yamato_tt
+				hidden_effect = {
+					add_equipment_production = {
+						equipment = {
+							type = ship_hull_super_heavy_1
+							creator = "JAP" 
+							version_name = "Yamato Class"
+						}
+						name = "Yamato" 
+						requested_factories = 1
+						progress = 0.75
+						amount = 1
+					}
+					add_equipment_production = {
+						equipment = {
+							type = ship_hull_super_heavy_1
+							creator = "JAP" 
+							version_name = "Yamato Class"
+						}
+						name = "Musashi" 
+						requested_factories = 1
+						progress = 0.5
+						amount = 1
+					}
+				}
+			}
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+    }
+    ugn_decision_2 = { #ZERO
+		icon = ugn_factory_plane_icon		#The left side icon to show for this decision.
+		
+		# CONDITIONS TO MAKE THIS DECISION/MISSION APPEAR AND EXECUTE
+		
+		available = {		#Conditions that will allow the player/AI to click the decision and execute its effect.
+			
+			OR = {
+				not = { has_dlc = "By Blood Alone" }
+				ROOT = {
+					has_tech = improved_small_airframe
+					has_tech = aa_lmg
+					has_tech = aa_cannon_1
+					has_tech = engines_3
+					has_tech = range_improvements
+				}
+			}
+		}
+		
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_re_enable = 1	#The amount of days of days it will take for the decision to reappear. Not valid if fire_only_once is set to yes
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				original_tag = JAP
+			}
+		}		
+
+		cost = 0		#The cost to execute the decision, by default its political power.
+
+		# EFFECTS OF THIS DECISION/MISSION
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			custom_effect_tooltip = JAP_the_zero_tt
+			hidden_effect = { 
+				if = {
+					limit = {
+						NOT = {
+							has_dlc = "By Blood Alone"
+						}
+					}
+					set_technology = { cv_fighter2 = 1 } 
+				}
+				else = {
+					create_equipment_variant = {
+						name = "A6M Zero-Sen"
+						type = cv_small_plane_airframe_2
+						modules = {
+							fixed_main_weapon_slot = light_mg_2x
+							fixed_auxiliary_weapon_slot_1 = aircraft_cannon_1_2x
+							engine_type_slot = engine_3_1x
+							special_type_slot_1 = drop_tanks
+							special_type_slot_2 = fuel_tanks_small
+						}
+						icon = "GFX_JAP_cv_fighter2_medium"
+					}
+				}
+			}
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+    }
+	
+	ugn_decision_3 = { #industrialise those farmers
+		icon = ugn_factory_wrench_icon		#The left side icon to show for this decision.
+		
+		# CONDITIONS TO MAKE THIS DECISION/MISSION APPEAR AND EXECUTE
+		
+		available = {		#Conditions that will allow the player/AI to click the decision and execute its effect.
+			OR = {
+				ROOT = {
+					any_controlled_state = {
+						industrial_complex > 10
+					}
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+				ROOT = {
+					num_of_factories > 50
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+			}
+		}
+		
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_remove = 120
+		days_re_enable = 1	#The amount of days of days it will take for the decision to reappear. Not valid if fire_only_once is set to yes
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				has_idea = populous_farmers
+			}
+		}		
+
+		cost = 0		#The cost to execute the decision, by default its political power.
+
+		# EFFECTS OF THIS DECISION/MISSION
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			add_ideas = ugn_officials_sent
+		}
+		
+		remove_effect = {
+			remove_ideas = ugn_officials_sent
+			swap_ideas = {
+				remove_idea = populous_farmers
+				add_idea = industrialised_farmers
+			}
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+    }
+	
+	ugn_decision_4 = { # develop industry
+		icon = ugn_factory_wrench_icon		#The left side icon to show for this decision.
+		
+		# CONDITIONS TO MAKE THIS DECISION/MISSION APPEAR AND EXECUTE
+		
+		available = {		#Conditions that will allow the player/AI to click the decision and execute its effect.
+			OR = {
+				ROOT = {
+					any_controlled_state = {
+						industrial_complex > 12
+					}
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+				ROOT = {
+					num_of_factories > 60
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+			}
+		}
+		
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_remove = 180
+		days_re_enable = 1	#The amount of days of days it will take for the decision to reappear. Not valid if fire_only_once is set to yes
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				has_idea = failing_industry
+			}
+		}		
+
+		cost = 0		#The cost to execute the decision, by default its political power.
+
+		# EFFECTS OF THIS DECISION/MISSION
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			add_ideas = ugn_officials_sent
+		}
+		
+		remove_effect = {
+			remove_ideas = ugn_officials_sent
+			swap_ideas = {
+				remove_idea = failing_industry
+				add_idea = established_industry
+			}
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+    }
+	
+	ugn_decision_5 = { # equip 1
+		icon = ugn_industry_icon		#The left side icon to show for this decision.
+		
+		# CONDITIONS TO MAKE THIS DECISION/MISSION APPEAR AND EXECUTE
+		
+		available = {		#Conditions that will allow the player/AI to click the decision and execute its effect.
+			OR = {
+				ROOT = {
+					any_controlled_state = {
+						arms_factory > 8
+					}
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+				ROOT = {
+					num_of_factories > 50
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+			}
+		}
+		
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_remove = 120
+		days_re_enable = 1	#The amount of days of days it will take for the decision to reappear. Not valid if fire_only_once is set to yes
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				has_idea = ugn_bad_equipped
+			}
+		}		
+
+		cost = 0		#The cost to execute the decision, by default its political power.
+
+		# EFFECTS OF THIS DECISION/MISSION
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			add_ideas = ugn_officials_sent
+		}
+		
+		remove_effect = {
+			remove_ideas = ugn_officials_sent
+			swap_ideas = {
+				remove_idea = ugn_bad_equipped
+				add_idea = ugn_poor_equipped
+			}
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+    }
+	
+	ugn_decision_6 = { # equip 2
+		icon = ugn_industry_icon		#The left side icon to show for this decision.
+		
+		# CONDITIONS TO MAKE THIS DECISION/MISSION APPEAR AND EXECUTE
+		
+		available = {		#Conditions that will allow the player/AI to click the decision and execute its effect.
+			OR = {
+				ROOT = {
+					any_controlled_state = {
+						arms_factory > 12
+					}
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+				ROOT = {
+					num_of_factories > 60
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+			}
+		}
+		
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_remove = 120
+		days_re_enable = 1	#The amount of days of days it will take for the decision to reappear. Not valid if fire_only_once is set to yes
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				has_idea = ugn_poor_equipped
+			}
+		}		
+
+		cost = 0		#The cost to execute the decision, by default its political power.
+
+		# EFFECTS OF THIS DECISION/MISSION
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			add_ideas = ugn_officials_sent
+		}
+		
+		remove_effect = {
+			remove_ideas = ugn_officials_sent
+			swap_ideas = {
+				remove_idea = ugn_poor_equipped
+				add_idea = ugn_equipped
+			}
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+    }
+	
+	ugn_decision_7 = { # train 1
+		icon = ugn_military		#The left side icon to show for this decision.
+		
+		# CONDITIONS TO MAKE THIS DECISION/MISSION APPEAR AND EXECUTE
+		
+		available = {		#Conditions that will allow the player/AI to click the decision and execute its effect.
+			OR = {
+				ROOT = {
+					any_controlled_state = {
+						arms_factory > 2
+					}
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+				ROOT = {
+					num_of_factories > 20
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+			}
+		}
+		
+		cost = 50
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_remove = 120
+		days_re_enable = 1	#The amount of days of days it will take for the decision to reappear. Not valid if fire_only_once is set to yes
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				has_idea = ugn_incompetent
+			}
+		}		
+
+		#The cost to execute the decision, by default its political power.
+
+		# EFFECTS OF THIS DECISION/MISSION
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			add_ideas = ugn_officials_sent
+		}
+		
+		remove_effect = {
+			remove_ideas = ugn_officials_sent
+			swap_ideas = {
+				remove_idea = ugn_incompetent
+				add_idea = ugn_training
+			}
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+    }
+	
+	ugn_decision_8 = { # train 2
+		icon = ugn_military		#The left side icon to show for this decision.
+		
+		# CONDITIONS TO MAKE THIS DECISION/MISSION APPEAR AND EXECUTE
+		
+		available = {		#Conditions that will allow the player/AI to click the decision and execute its effect.
+			OR = {
+				ROOT = {
+					any_controlled_state = {
+						arms_factory > 4
+					}
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+				ROOT = {
+					num_of_factories > 30
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+			}
+		}
+		
+		cost = 75
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_remove = 150
+		days_re_enable = 1	#The amount of days of days it will take for the decision to reappear. Not valid if fire_only_once is set to yes
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				has_idea = ugn_training
+			}
+		}		
+
+	#The cost to execute the decision, by default its political power.
+
+		# EFFECTS OF THIS DECISION/MISSION
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			add_ideas = ugn_officials_sent
+		}
+		
+		remove_effect = {
+			remove_ideas = ugn_officials_sent
+			swap_ideas = {
+				remove_idea = ugn_training
+				add_idea = ugn_trained
+			}
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+    }
+	
+	ugn_decision_9 = { # uproot corruption
+		icon = ugn_fist		#The left side icon to show for this decision.
+		
+		# CONDITIONS TO MAKE THIS DECISION/MISSION APPEAR AND EXECUTE
+		
+		available = {		#Conditions that will allow the player/AI to click the decision and execute its effect.
+			OR = {
+				ROOT = {
+					has_defensive_war = yes
+				}
+				ROOT = {
+					has_offensive_war = yes
+					surrender_progress > 0.05
+				}
+				ROOT = {
+					fascism < 0.3
+				}
+			}
+		}
+		
+		cost = 150
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_remove = 150
+		days_re_enable = 1	#The amount of days of days it will take for the decision to reappear. Not valid if fire_only_once is set to yes
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				has_idea = ugn_army_corruption
+			}
+		}		
+
+		#The cost to execute the decision, by default its political power.
+
+		# EFFECTS OF THIS DECISION/MISSION
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			add_ideas = ugn_uprooting_corruption
+		}
+		
+		remove_effect = {
+			remove_ideas = ugn_uprooting_corruption
+			swap_ideas = {
+				remove_idea = ugn_army_corruption
+				add_idea = ugn_uncorrupted
+			}
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+    }
+	
+	ugn_decision_10 = { # train 3
+		icon = ugn_military		#The left side icon to show for this decision.
+		
+		# CONDITIONS TO MAKE THIS DECISION/MISSION APPEAR AND EXECUTE
+		
+		available = {		#Conditions that will allow the player/AI to click the decision and execute its effect.
+			OR = {
+				ROOT = {
+					any_controlled_state = {
+						arms_factory > 2
+					}
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+				ROOT = {
+					num_of_factories > 20
+					NOT = {
+						has_idea = ugn_officials_sent
+					}
+				}
+			}
+		}
+		
+		cost = 50
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_remove = 120
+		days_re_enable = 1	#The amount of days of days it will take for the decision to reappear. Not valid if fire_only_once is set to yes
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				has_idea = ugn_army_young
+			}
+		}		
+
+		#The cost to execute the decision, by default its political power.
+
+		# EFFECTS OF THIS DECISION/MISSION
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			add_ideas = ugn_training
+		}
+		
+		remove_effect = {
+			remove_ideas = ugn_training
+			swap_ideas = {
+				remove_idea = ugn_army_young
+				add_idea = inventive_leadership
+			}
+			country_event = { id = uniqueness.20 }
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+		
+    }
+	
+	ugn_decision_11 = { # magma tech FLAMETHROWER
+		icon = ugn_factory_tank
+		
+		available = {
+			ROOT = {
+				has_idea = people_of_fire
+			}
+			has_tech = tech_engineers2
+			has_tech = magma_tech_0
+			NOT = {
+				has_idea = ugn_diverted_research
+			}
+		}
+		
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_remove = 120
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				has_idea = people_of_fire
+				has_tech = gwtank_chassis
+			}
+		}		
+
+		cost = 0		#The cost to execute the decision, by default its political power.
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			add_ideas = ugn_diverted_research
+		}
+		
+		remove_effect = {
+			set_technology = { magma_tech_thrower = 1 }
+			remove_ideas = ugn_diverted_research
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+		
+    }
+	ugn_decision_12 = { # magma tech SHIP ENGINES
+		icon = warship_ugn_icon
+		
+		available = {
+			ROOT = {
+				NOT = {
+					has_idea = ugn_diverted_research
+				}
+			}
+			OR = {
+				has_tech = improved_ship_hull_light
+				has_tech = improved_ship_hull_cruiser
+				has_tech = improved_ship_hull_heavy
+				has_tech = improved_ship_hull_carrier
+				has_tech = improved_ship_hull_submarine
+			}
+		}
+		
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_remove = 120
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				has_idea = people_of_fire
+			}
+			OR = {
+				has_tech = early_ship_hull_light
+				has_tech = early_ship_hull_cruiser
+				has_tech = early_ship_hull_heavy
+				has_tech = early_ship_hull_carrier
+				has_tech = early_ship_hull_submarine
+			}
+		}		
+
+		cost = 0		#The cost to execute the decision, by default its political power.
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			add_ideas = ugn_diverted_research
+		}
+		
+		remove_effect = {
+			set_technology = { magma_tech_engine_ship = 1 }
+			remove_ideas = ugn_diverted_research
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+		
+    }
+	ugn_decision_13 = { # magma tech PLANE ENGINES
+		icon = ugn_factory_plane_icon
+		
+		available = {
+			ROOT = {
+				has_tech = engines_2
+				NOT = {
+					has_idea = ugn_diverted_research
+				}
+			}
+		}
+		
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_remove = 120
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				has_idea = people_of_fire
+				has_tech = engines_1
+			}
+		}		
+
+		cost = 0		#The cost to execute the decision, by default its political power.
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			add_ideas = ugn_diverted_research
+		}
+		
+		remove_effect = {
+			set_technology = { magma_tech_engine_air = 1 }
+			remove_ideas = ugn_diverted_research
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+		
+    }
+	ugn_decision_14 = { # magma tech PLANE WEAPONS
+		icon = ugn_factory_plane_icon
+		
+		available = {
+			ROOT = {
+				has_idea = people_of_fire
+				has_tech = antitank2
+				has_tech = advanced_rocket_engines
+				NOT = {
+					has_idea = ugn_diverted_research
+				}
+			}
+		}
+		
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_remove = 120
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				has_idea = people_of_fire
+				has_tech = magma_tech_engine_air
+			}
+		}		
+
+		cost = 0		#The cost to execute the decision, by default its political power.
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			add_ideas = ugn_diverted_research
+		}
+		
+		remove_effect = {
+			set_technology = { magma_tech_air_weapons = 1 }
+			remove_ideas = ugn_diverted_research
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+		
+    }
+	ugn_decision_67 = { # ORDER 67
+		icon = ugn_gun_icon
+		
+		available = {
+			ROOT = {
+				has_country_leader_with_trait = ugn_clone_program_director_trait
+			}
+		}
+		
+		fire_only_once = yes		#If set to yes, the decision will only appear once, after execution will not appear again.
+		days_remove = 120
+
+		visible = {		#Conditions to make this decision visible, can be left blank to make it always appear.
+			ROOT = {
+				NOT = {
+					has_government = fascism
+				}
+				has_country_leader_with_trait = ugn_clone_program_director_trait
+			}
+		}		
+
+		cost = 200		#The cost to execute the decision, by default its political power.
+
+		complete_effect = {		#The effects to execute once the envelope icon is clicked.
+			country_event = { id = uniqueness.67 }
+		}
+		
+		# AI LOGIC FOR THIS DECISION/MISSION
+
+		ai_will_do = {	#Modifiers for the AI to decide when to execute the decision.
+			factor = 100			
+		}
+		
+    }
+}

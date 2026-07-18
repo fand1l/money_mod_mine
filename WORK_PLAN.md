@@ -396,6 +396,28 @@ Play-tester verdict on the lobby/seed workflow: reverting to the decision.
    starts with a working economy. Slot limits still clamp small states and
    are never modified.
 3. Noted for the record: the "History of Our Nation / Give Randomness"
-   event the tester screenshotted is not from this mod — another workshop
-   randomizer in the playset (see the ugc_*.mod entries in error.log) and
-   should be disabled to avoid double-randomization.
+   event the tester screenshotted is not from this mod — it belongs to the
+   author's other mod (see v2.0 below, which imports it properly).
+
+---
+
+## 16. Follow-up changes (v2.0)
+
+Feature import requested: the start-buff selection from the author's other
+repository, `fand1l/hoi4_rcpZ_mod` ("та кнопка яка в decisions і всі її
+дії").
+
+1. **Imported the complete UGN buff system verbatim** (252 files, no
+   renames): `uniqueness.*` event tree (bootstrap → who-participates
+   chooser → "History of Our Nation" → buff paths incl. full-random and
+   secret branches), all buff ideas + icons, the UGN decisions category
+   (re-trigger button, puppet hand-out, idea-upgrade chains), custom
+   traits, the custom techs/units/equipment some branches grant, event
+   pictures, texticons and localisation (BOM verified).
+2. **No file collisions** with the randomizer (verified before copy) — the
+   import is fully additive; `descriptor.mod`/`README.md` of the source
+   repo were not copied.
+3. **Compatibility:** buffs are national spirits and survive the territory
+   reshuffle; ordering between buff selection and the reshuffle decision
+   is irrelevant. Users must disable the standalone rcpZ/UGN mod to avoid
+   duplicate definitions.

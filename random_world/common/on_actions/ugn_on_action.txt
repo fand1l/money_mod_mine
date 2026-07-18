@@ -1,0 +1,38 @@
+on_actions = {
+	on_release_as_free = {
+		effect = {
+			if = {
+				limit = {
+					ROOT = {
+						NOT = {
+							has_country_flag = ugn_unique
+						}
+					}
+					has_global_flag = ugn_decision_time
+				}
+				ROOT = {
+					country_event = { id = uniqueness.3 }
+				}
+				
+			}
+		}
+	}
+	on_release_as_puppet = {
+		effect = {
+			if = {
+				limit = {
+					ROOT = {
+						NOT = {
+							has_country_flag = ugn_unique
+						}
+					}
+					has_global_flag = ugn_decision_time
+				}
+				ROOT = {
+					country_event = { id = uniqueness.3 }
+				}
+				
+			}
+		}
+	}
+}

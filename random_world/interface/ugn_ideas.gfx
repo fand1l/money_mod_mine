@@ -1,0 +1,519 @@
+spriteTypes = {	
+	
+	spriteType = {
+		name = "GFX_idea_ugn_oil_barrel"
+		texturefile = "gfx/interface/ideas/ugn_oil_barrel.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_research_4"
+		texturefile = "gfx/interface/ideas/ugn_research_4.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_treaty_fancy"
+		texturefile = "gfx/interface/ideas/ugn_treaty_fancy.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_lightning"
+		texturefile = "gfx/interface/ideas/ugn_lightning.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_sea_2"
+		texturefile = "gfx/interface/ideas/ugn_sea_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_switch"
+		texturefile = "gfx/interface/ideas/ugn_switch.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_research_1"
+		texturefile = "gfx/interface/ideas/ugn_research_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_intel"
+		texturefile = "gfx/interface/ideas/ugn_intel.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_hand_paper"
+		texturefile = "gfx/interface/ideas/ugn_hand_paper.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_wold_1"
+		texturefile = "gfx/interface/ideas/ugn_wold_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_graves"
+		texturefile = "gfx/interface/ideas/ugn_graves.dds"
+	}
+   spriteType = {
+		name = "GFX_idea_ugn_wheat"
+		texturefile = "gfx/interface/ideas/ugn_wheat.dds"
+	}
+   spriteType = {
+		name = "GFX_idea_ugn_defense"
+		texturefile = "gfx/interface/ideas/ugn_defense.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_fist"
+		texturefile = "gfx/interface/ideas/ugn_fist.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_fist_flames"
+		texturefile = "gfx/interface/ideas/ugn_fist_flames.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_hat_confused"
+		texturefile = "gfx/interface/ideas/ugn_hat_confused.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_ger_hat"
+		texturefile = "gfx/interface/ideas/ugn_army_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_2"
+		texturefile = "gfx/interface/ideas/ugn_army_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_3"
+		texturefile = "gfx/interface/ideas/ugn_army_3.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_4"
+		texturefile = "gfx/interface/ideas/ugn_army_4.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_5"
+		texturefile = "gfx/interface/ideas/ugn_army_5.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_6"
+		texturefile = "gfx/interface/ideas/ugn_army_6.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_7"
+		texturefile = "gfx/interface/ideas/ugn_army_7.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_8"
+		texturefile = "gfx/interface/ideas/ugn_army_8.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_9"
+		texturefile = "gfx/interface/ideas/ugn_army_9.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_10"
+		texturefile = "gfx/interface/ideas/ugn_army_10.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_11"
+		texturefile = "gfx/interface/ideas/ugn_army_11.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_12"
+		texturefile = "gfx/interface/ideas/ugn_army_12.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_13"
+		texturefile = "gfx/interface/ideas/ugn_army_13.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_14"
+		texturefile = "gfx/interface/ideas/ugn_army_14.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_sword_1"
+		texturefile = "gfx/interface/ideas/ugn_sword_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_sword_2"
+		texturefile = "gfx/interface/ideas/ugn_sword_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_jap_1"
+		texturefile = "gfx/interface/ideas/ugn_jap_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_jap_2"
+		texturefile = "gfx/interface/ideas/ugn_jap_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_jap_3"
+		texturefile = "gfx/interface/ideas/ugn_jap_3.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_jap_4"
+		texturefile = "gfx/interface/ideas/ugn_shintoism.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_drugs"
+		texturefile = "gfx/interface/ideas/ugn_drugs.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_plant"
+		texturefile = "gfx/interface/ideas/ugn_plant.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_indu_broke"
+		texturefile = "gfx/interface/ideas/ugn_indu_broke.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_indu_1"
+		texturefile = "gfx/interface/ideas/ugn_indu_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_indu_2"
+		texturefile = "gfx/interface/ideas/ugn_indu_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_indu_3"
+		texturefile = "gfx/interface/ideas/ugn_indu_3.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_indu_4"
+		texturefile = "gfx/interface/ideas/ugn_indu_4.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_usa"
+		texturefile = "gfx/interface/ideas/ugn_USA.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_sov"
+		texturefile = "gfx/interface/ideas/ugn_revolution.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_george"
+		texturefile = "gfx/interface/ideas/ugn_george_v.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_stoi"
+		texturefile = "gfx/interface/ideas/ugn_brittish_stoicism.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_greymen_1"
+		texturefile = "gfx/interface/ideas/ugn_greymen_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_greymen_2"
+		texturefile = "gfx/interface/ideas/ugn_greymen_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_greymen_3"
+		texturefile = "gfx/interface/ideas/ugn_greymen_3.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_wings_1"
+		texturefile = "gfx/interface/ideas/ugn_wings_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_wings_2"
+		texturefile = "gfx/interface/ideas/ugn_wings_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_oil"
+		texturefile = "gfx/interface/ideas/ugn_oil.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_scale"
+		texturefile = "gfx/interface/ideas/ugn_scale.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_knife"
+		texturefile = "gfx/interface/ideas/ugn_bloody_knife.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_glitterhoof"
+		texturefile = "gfx/interface/ideas/ugn_glitterhoof.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_strings"
+		texturefile = "gfx/interface/ideas/ugn_strings.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_oppression"
+		texturefile = "gfx/interface/ideas/ugn_oppression.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_horse"
+		texturefile = "gfx/interface/ideas/ugn_horse.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_brain"
+		texturefile = "gfx/interface/ideas/ugn_brain.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_eagle"
+		texturefile = "gfx/interface/ideas/ugn_eagle.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_eagle_2"
+		texturefile = "gfx/interface/ideas/ugn_eagle_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_secret_police"
+		texturefile = "gfx/interface/ideas/ugn_secret_police.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_political"
+		texturefile = "gfx/interface/ideas/ugn_political.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_drinking"
+		texturefile = "gfx/interface/ideas/ugn_drinking.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_bank"
+		texturefile = "gfx/interface/ideas/ugn_bank.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_air_1"
+		texturefile = "gfx/interface/ideas/ugn_air_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_air_2"
+		texturefile = "gfx/interface/ideas/ugn_air_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_air_3"
+		texturefile = "gfx/interface/ideas/ugn_air_3.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_air_4"
+		texturefile = "gfx/interface/ideas/ugn_air_4.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_bombing"
+		texturefile = "gfx/interface/ideas/ugn_bombing.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_bombing_2"
+		texturefile = "gfx/interface/ideas/ugn_bombing_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_convoy"
+		texturefile = "gfx/interface/ideas/ugn_convoy.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_boat_bad"
+		texturefile = "gfx/interface/ideas/ugn_rival_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_boat_neglect"
+		texturefile = "gfx/interface/ideas/ugn_rival_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_boat_best"
+		texturefile = "gfx/interface/ideas/ugn_rival_4.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_air_mech"
+		texturefile = "gfx/interface/ideas/ugn_air_mech.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_armor"
+		texturefile = "gfx/interface/ideas/ugn_armor.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_art"
+		texturefile = "gfx/interface/ideas/ugn_art.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_planning"
+		texturefile = "gfx/interface/ideas/ugn_planning.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_soldier_1"
+		texturefile = "gfx/interface/ideas/ugn_soldier_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_soldier_2"
+		texturefile = "gfx/interface/ideas/ugn_soldier_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_soldier_3"
+		texturefile = "gfx/interface/ideas/ugn_soldier_3.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_soldiers"
+		texturefile = "gfx/interface/ideas/ugn_soldiers.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_army_sad"
+		texturefile = "gfx/interface/ideas/ugn_army_sad.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_spy_1"
+		texturefile = "gfx/interface/ideas/ugn_spy_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_spy_2"
+		texturefile = "gfx/interface/ideas/ugn_spy_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_spy_3"
+		texturefile = "gfx/interface/ideas/ugn_spy_3.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_suitcase"
+		texturefile = "gfx/interface/ideas/ugn_suitcase.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_broken"
+		texturefile = "gfx/interface/ideas/ugn_broken.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_forts"
+		texturefile = "gfx/interface/ideas/ugn_forts.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_rail"
+		texturefile = "gfx/interface/ideas/ugn_rail.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_factory_plane"
+		texturefile = "gfx/interface/ideas/ugn_factory_plane.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_factory_shiny"
+		texturefile = "gfx/interface/ideas/ugn_factory_shiny.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_factory"
+		texturefile = "gfx/interface/ideas/ugn_factory.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_carrier_big"
+		texturefile = "gfx/interface/ideas/ugn_carrier_big.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_carrier_big_2"
+		texturefile = "gfx/interface/ideas/ugn_carrier_big_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_carrier_small"
+		texturefile = "gfx/interface/ideas/ugn_carrier_small.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_navy_1"
+		texturefile = "gfx/interface/ideas/ugn_navy_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_navy_2"
+		texturefile = "gfx/interface/ideas/ugn_navy_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_navy_3"
+		texturefile = "gfx/interface/ideas/ugn_navy_3.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_1"
+		texturefile = "gfx/interface/ideas/ugn_designer_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_2"
+		texturefile = "gfx/interface/ideas/ugn_designer_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_3"
+		texturefile = "gfx/interface/ideas/ugn_designer_3.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_4"
+		texturefile = "gfx/interface/ideas/ugn_designer_4.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_5"
+		texturefile = "gfx/interface/ideas/ugn_designer_5.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_6"
+		texturefile = "gfx/interface/ideas/ugn_designer_6.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_7"
+		texturefile = "gfx/interface/ideas/ugn_designer_7.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_8"
+		texturefile = "gfx/interface/ideas/ugn_designer_8.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_9"
+		texturefile = "gfx/interface/ideas/ugn_designer_9.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_10"
+		texturefile = "gfx/interface/ideas/ugn_designer_10.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_11"
+		texturefile = "gfx/interface/ideas/ugn_designer_11.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_12"
+		texturefile = "gfx/interface/ideas/ugn_designer_12.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_13"
+		texturefile = "gfx/interface/ideas/ugn_designer_13.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_14"
+		texturefile = "gfx/interface/ideas/ugn_designer_14.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_15"
+		texturefile = "gfx/interface/ideas/ugn_designer_15.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_16"
+		texturefile = "gfx/interface/ideas/ugn_designer_16.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_17"
+		texturefile = "gfx/interface/ideas/ugn_designer_17.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_designer_18"
+		texturefile = "gfx/interface/ideas/ugn_designer_18.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_escort"
+		texturefile = "gfx/interface/ideas/ugn_escort.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_radio"
+		texturefile = "gfx/interface/ideas/ugn_radio.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_landlock"
+		texturefile = "gfx/interface/ideas/ugn_landlock.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_sea_1"
+		texturefile = "gfx/interface/ideas/ugn_sea_1.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_sea_3"
+		texturefile = "gfx/interface/ideas/ugn_sea_3.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_ship"
+		texturefile = "gfx/interface/ideas/ugn_ship.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_ship_shield"
+		texturefile = "gfx/interface/ideas/ugn_ship_shield.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_ship_shield_2"
+		texturefile = "gfx/interface/ideas/ugn_ship_shield_2.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_torpedo"
+		texturefile = "gfx/interface/ideas/ugn_torpedo.dds"
+	}
+	spriteType = {
+		name = "GFX_idea_ugn_wheels"
+		texturefile = "gfx/interface/ideas/ugn_wheel.dds"
+	}
+}

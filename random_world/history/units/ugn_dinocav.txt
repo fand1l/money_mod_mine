@@ -1,0 +1,11 @@
+division_template = {
+    name = "Dino Cavalry"
+    is_locked = no
+    priority = 2
+    regiments = {
+        dino_cav = { x = 0 y = 0 }
+        dino_cav = { x = 0 y = 1 }
+        dino_cav = { x = 0 y = 2 }
+        dino_cav = { x = 0 y = 3 }
+    }
+}

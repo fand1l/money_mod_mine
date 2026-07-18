@@ -1,0 +1,186 @@
+technologies = {
+	
+	ugn_alloy_tech_0 = {
+		
+		enable_equipment_modules = {
+			ugn_tank_module_alloy_armor_rivet
+			ugn_tank_module_alloy_armor_cast
+			ugn_tank_module_alloy_armor_weld
+		}
+	
+		allow = {
+			always = no
+		}
+	}
+	lightning_tech_0 = {
+		
+		static_anti_air_damage_factor = 0.1
+		
+		enable_equipment_modules = {
+			ugn_tank_lightning_call
+			ship_lightning_call
+		}
+	
+		allow = {
+			always = no
+		}
+	}
+	magma_tech_air_weapons = {
+		
+		enable_equipment_modules = {
+			airplane_magma_missile
+			airplane_magma_cannon
+		}
+	
+		#set at gamestart
+		allow = {
+			always = no
+		}
+	}
+	magma_tech_engine_ship = {
+		
+		enable_equipment_modules = {
+			light_ship_magma_engine
+			sub_ship_magma_engine
+			cruiser_ship_magma_engine
+			heavy_ship_magma_engine
+			carrier_ship_magma_engine
+		}
+	
+		#set at gamestart
+		allow = {
+			always = no
+		}
+	}
+	magma_tech_engine_air = {
+		
+		enable_equipment_modules = {
+			airplane_magma_engine
+		}
+	
+		#set at gamestart
+		allow = {
+			always = no
+		}
+	}
+	magma_tech_thrower = {
+		
+		enable_equipment_modules = {
+			ugn_tank_magma_thrower
+		}
+	
+		#set at gamestart
+		allow = {
+			always = no
+		}
+	}
+	magma_tech_0 = {
+		
+		enable_equipment_modules = {
+			ugn_tank_magma_engine
+		}
+	
+		#set at gamestart
+		allow = {
+			always = no
+		}
+	}
+	magma_tech_debug = {
+		
+		enable_subunits = {
+			light_flame_tank
+			medium_flame_tank
+			heavy_flame_tank
+		}
+		
+		enable_equipment_modules = {
+			ugn_tank_magma_engine
+			ugn_tank_magma_thrower
+			light_ship_magma_engine
+			sub_ship_magma_engine
+			cruiser_ship_magma_engine
+			heavy_ship_magma_engine
+			carrier_ship_magma_engine
+			airplane_magma_missile
+			airplane_magma_cannon
+			airplane_magma_engine
+		}
+	
+		#set at gamestart
+		allow = {
+			always = no
+		}
+	}
+	seaborn_infantry_tech = {
+		
+		enable_subunits = {
+			seaborn_infantry
+		}
+	
+		#set at gamestart
+		allow = {
+			always = no
+		}
+	}
+	dino_cav_tech = {
+		
+		enable_subunits = {
+			dino_cav
+		}
+	
+		#set at gamestart
+		allow = {
+			always = no
+		}
+	}
+	
+	flame_horse_tech = {
+		
+		enable_subunits = {
+			flame_cavalry
+		}
+	
+		#set at gamestart
+		allow = {
+			always = no
+		}
+	}
+	cultist_tech = {
+		
+		enable_subunits = {
+			cultist_company
+		}
+	
+		#set at gamestart
+		allow = {
+			always = no
+		}
+	}
+	aero_tech_0 = {
+		
+		enable_subunits = {
+			mechanized_paratroopers
+		}
+		
+		enable_equipments = {
+			aero_hubert_equipment
+			aero_hubert_equipment_1
+		}
+	
+		#set at gamestart
+		allow = {
+			always = no
+		}
+	}
+	puppet_tech = {
+		
+		enable_subunits =  {
+			infantry
+		}
+		
+		allow = {
+			always = no
+		}
+		
+	}
+}

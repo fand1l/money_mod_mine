@@ -1,0 +1,203 @@
+leader_traits = {
+
+	ugn_dragon_king = {
+		random = no
+		
+		justify_war_goal_time = -0.5
+		generate_wargoal_tension = 0
+		non_core_manpower = 0.5
+		weekly_manpower = 500
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	ugn_king_of_terror = {
+		random = no
+		
+		resistance_damage_to_garrison = -0.25
+		foreign_subversive_activites = -0.3
+		non_core_manpower = 0.2
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	ugn_secret_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	ugn_clone_program_director_trait = {
+		random = no
+		
+		training_time_army_factor = -0.1
+		
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	ugn_clone_commander_trait = {
+		random = no
+		
+		training_time_army_factor = -0.25
+		special_forces_training_time_factor = -0.15
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	dino_whisperer_trait = {
+		random = no
+		
+		cavalry_attack_factor = 0.1
+		cavalry_defence_factor = 0.1
+		
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	convoy_manufacturer_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	miniature_boats_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	turtle_ship_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	ordnance_expert_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	plane_manufacturing_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	long_range_plane_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	twin_engine_specialists_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	warm_environment_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	cold_environment_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	ugn_mini_tank = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	ugn_lancer_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	ugn_tank_maker = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	ugn_artillery_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	ugn_twin_star_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	ugn_rocket_specialist_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	ugn_hammer_anvil_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	ugn_armored_fist_trait = {
+		random = no
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+}

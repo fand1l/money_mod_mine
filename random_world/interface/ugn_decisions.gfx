@@ -1,0 +1,56 @@
+spriteTypes = {	
+
+### categories
+
+   spriteType = {
+		name = "GFX_ugn_category_generic"
+		texturefile = "gfx/interface/decisions/decision_category_ugn_generic.dds"
+	}
+	spriteType = {
+		name = "GFX_ugn_category_generic_arms_trade"
+		texturefile = "gfx/interface/decisions/decision_category_ugn_generic_arms_trade.dds"
+	}
+	
+### decisions
+	
+	spriteType = {
+		name = "GFX_decision_clipboard_ugn_icon"
+		texturefile = "gfx/interface/decisions/clipboard_ugn.dds"
+	}
+	spriteType = {
+		name = "GFX_decision_ugn_factory_tank"
+		texturefile = "gfx/interface/decisions/decision_ugn_factory_tank.dds"
+	}
+	spriteType = {
+		name = "GFX_decision_ugn_gun_icon"
+		texturefile = "gfx/interface/decisions/decision_ugn_gun.dds"
+	}
+	spriteType = {
+		name = "GFX_decision_ugn_factory_icon"
+		texturefile = "gfx/interface/decisions/decision_ugn_factory.dds"
+	}
+	spriteType = {
+		name = "GFX_decision_ugn_factory_wrench_icon"
+		texturefile = "gfx/interface/decisions/decision_ugn_factory_wrench.dds"
+	}
+	spriteType = {
+		name = "GFX_decision_ugn_factory_plane_icon"
+		texturefile = "gfx/interface/decisions/decision_ugn_factory_plane.dds"
+	}
+	spriteType = {
+		name = "GFX_decision_ugn_industry_icon"
+		texturefile = "gfx/interface/decisions/decision_ugn_industry.dds"
+	}
+	spriteType = {
+		name = "GFX_decision_warship_ugn_icon"
+		texturefile = "gfx/interface/decisions/warship_ugn.dds"
+	}
+	spriteType = {
+		name = "GFX_decision_ugn_military"
+		texturefile = "gfx/interface/decisions/decision_ugn_military.dds"
+	}
+	spriteType = {
+		name = "GFX_decision_ugn_fist"
+		texturefile = "gfx/interface/decisions/decision_ugn_fist.dds"
+	}
+}

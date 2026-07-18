@@ -322,6 +322,37 @@ to `= 1`. Independently, removing the `transfer_state` / `add_state_core`
 lines in their `history/countries` files removes their pre-reshuffle
 starting borders.
 
+## Part 7.5 — The start-buff system (imported from `fand1l/hoi4_rcpZ_mod`)
+
+The mod also contains the complete "choose your nation's buffs" system
+ported from the author's other mod. How it plays:
+
+1. About a day after a campaign starts, a hidden bootstrap event opens a
+   chooser for the human player: **who gets to pick buffs** — everyone /
+   minors only / only me / everyone but me (AI countries pick their paths
+   automatically via weighted chances; a follow-up question can hand a
+   special tech to AI puppet nations).
+2. Each participating country then gets **"History of Our Nation"** — the
+   branching event: *great history / ordinary / wronged / full random /
+   a secret path* — and the follow-up choices grant **national spirits**
+   (the buffs), free units, techs or bonuses depending on the path.
+3. The Decisions panel gains the imported **UGN category** with: a button
+   to re-open the selection event, a button to grant selection to your
+   puppets, and the whole chain of later "upgrade" decisions that swap
+   weaker spirits for stronger ones over time (industrialise farmers,
+   equip/train the army, uproot corruption, …).
+4. Everything the branches reference came along: ideas + icons, event
+   pictures, custom traits, the handful of custom techs/units some silly
+   branches use (flame cavalry and friends), localisation.
+
+Interaction with the world reshuffle: none to worry about — buffs are
+national spirits on countries, they survive the territory randomization,
+and the order (buffs first or reshuffle first) does not matter.
+
+**IMPORTANT:** disable the original rcpZ/UGN mod in your playset once this
+version is installed. Running both at once duplicates every event, idea and
+decision (log spam, double events).
+
 ## Part 8 — Which file does what (one line each)
 
 | File | Purpose |
@@ -337,7 +368,8 @@ starting borders.
 | `common/on_actions/ZZ_random_world_on_actions.txt` | "At every session start ban factions; every week re-ban them." |
 | `common/scripted_effects/random_world_scripted_effects.txt` | The entire algorithm (sections 0–12, commented). |
 | `common/scripted_effects/rw_world_seed.txt` | The one number that selects **which** world is generated — edit for a new world, keep to replay one. |
-| `randomize_seed_and_play.bat` (mod root) | One-click helper: writes a random seed and starts HOI4 — every launch a new world. Run it while the game is closed. |
+| `randomize_seed_and_play.bat` (mod root) | One-click helper for the optional lobby mode: writes a random seed and starts HOI4. Run it while the game is closed. |
+| `events/ugn_events.txt`, `common/ideas/ugn_*` + `vanilla_ideas.txt`, `common/decisions/*ugn*`, `common/technologies*/ugn_*`, `common/units/…`, `common/country_leader/ugn_traits.txt`, `interface/ugn_*.gfx`, `gfx/…` | The imported start-buff system (Part 7.5) — self-contained, prefix `ugn_`/`uniqueness`. |
 | `history/countries/TAG - Name.txt` | Custom country's 1936 setup: capital, **its starting borders** (`transfer_state` + `add_state_core`), techs, politics, equipment. |
 | `history/units/TAG_1936.txt` | Its division blueprint (so it can train troops immediately). |
 | `localisation/english/random_world_l_english.yml` | The names: 4 ideology names per custom country. **Must stay UTF-8 with BOM** (it already is; editors keep it if you just edit and save). |

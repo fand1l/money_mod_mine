@@ -1,0 +1,39 @@
+spriteTypes = {	
+
+   spriteType = {
+		name = "GFX_ugn_army"
+		texturefile = "gfx/event_pictures/report_event_ugn_army.dds"
+	}
+	spriteType = {
+		name = "GFX_ugn_artillery"
+		texturefile = "gfx/event_pictures/report_event_ugn_artillery.dds"
+	}
+	spriteType = {
+		name = "GFX_ugn_letter"
+		texturefile = "gfx/event_pictures/report_event_ugn_letter.dds"
+	}
+	spriteType = {
+		name = "GFX_ugn_military"
+		texturefile = "gfx/event_pictures/report_event_ugn_military.dds"
+	}
+	spriteType = {
+		name = "GFX_ugn_navy"
+		texturefile = "gfx/event_pictures/report_event_ugn_navy.dds"
+	}
+	spriteType = {
+		name = "GFX_ugn_planning"
+		texturefile = "gfx/event_pictures/report_event_ugn_planning.dds"
+	}
+	spriteType = {
+		name = "GFX_ugn_politicians"
+		texturefile = "gfx/event_pictures/report_event_ugn_politicians.dds"
+	}
+	spriteType = {
+		name = "GFX_ugn_treaty1"
+		texturefile = "gfx/event_pictures/report_event_ugn_treaty1.dds"
+	}
+	spriteType = {
+		name = "GFX_ugn_treaty2"
+		texturefile = "gfx/event_pictures/report_event_ugn_treaty2.dds"
+	}
+}
